@@ -1,0 +1,10 @@
+setup.py
+backtest/__init__.py
+backtest/commands.py
+data/__init__.py
+stocktrack.egg-info/PKG-INFO
+stocktrack.egg-info/SOURCES.txt
+stocktrack.egg-info/dependency_links.txt
+stocktrack.egg-info/entry_points.txt
+stocktrack.egg-info/requires.txt
+stocktrack.egg-info/top_level.txt
