@@ -1,0 +1,1 @@
+RSI < 30 : BUY | RSI > 70 : SELL

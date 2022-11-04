@@ -20,6 +20,7 @@ def test_group():
 
 test_group.add_command(backtest_commands.create_test)
 test_group.add_command(backtest_commands.run_test)
+test_group.add_command(backtest_commands.get_tests)
 
 @click.group(name='get')
 def get_group():
@@ -28,7 +29,6 @@ def get_group():
     '''
     pass
 
-# get_group.add_command(get_stock_price)
 main.add_command(get_group)
 main.add_command(test_group)
 

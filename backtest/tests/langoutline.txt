@@ -1,0 +1,11 @@
+use rsi 21ma
+
+buy {
+	crossing rsi < 30
+	crossing 21ma < open_price
+}
+
+sell {
+	crossing rsi > 60
+	crossing 21ma > open_price
+}
