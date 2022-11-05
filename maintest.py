@@ -35,7 +35,7 @@ def run_strat(data):
 
 def main():
     # get data from csv file
-    spy = Stock(pd.read_csv(r'stock data/apple.csv'))
+    spy = Stock(pd.read_csv(r'backtest/data/spy.csv'))
     percent_gain, end_total, num_of_trades = run_strat(spy.data)
     print(f"Percent Gain: {percent_gain}%")
     print(f"Ending Total: ${end_total}")

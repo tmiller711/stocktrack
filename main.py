@@ -22,13 +22,5 @@ test_group.add_command(backtest_commands.create_test)
 test_group.add_command(backtest_commands.run_test)
 test_group.add_command(backtest_commands.get_tests)
 
-@click.group(name='get')
-def get_group():
-    '''
-    Group of commands to get something
-    '''
-    pass
-
-main.add_command(get_group)
 main.add_command(test_group)
 
