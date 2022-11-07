@@ -70,7 +70,12 @@ class Test:
             return (int(data[criteria[0].upper()]) > int(criteria[2]))
     
     def retrieve_stock_data(self):
-        r = requests.post(f"http://127.0.0.1:8000/api/{self.stock}/", json={'indicators': self.indicators})
+        with open('credentials.txt', 'r') as file:
+            data = file.read()
+        token_dict = json.loads(data)
+        # print(token_dict['access'])
+        headers = {"Authorization": f"Bearer {token_dict['access']}"}
+        r = requests.post(f"http://127.0.0.1:8000/api/{self.stock}/", json={'indicators': self.indicators}, headers=headers)
         data = json.loads(r.text)
         data = pd.DataFrame(data=data)
 

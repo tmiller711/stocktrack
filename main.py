@@ -8,7 +8,6 @@ import json
 
 @click.group()
 @click.version_option(package_name='stocktrack')
-# @click.pass_context
 def main():
     """
     Commands to manage your assets
@@ -55,15 +54,34 @@ def get_tests():
     '''
     tests = os.listdir('backtests')
     if len(tests) == 0:
-        click.echo('User has not many any tests')
+        click.echo('User has not made any tests')
 
     else:
         for test in tests:
             click.echo(test.replace('.txt', ''))
 
+@click.command(name="delete")
+def delete_test():
+    '''
+    Delete a back test
+    '''
+    tests = os.listdir('backtests')
+    if len(tests) == 0:
+        click.echo('User has no tests to delete')
+
+    for test in tests:
+        click.echo(test.replace('.txt', ''))
+    del_test = click.prompt("Which test would you like to delete?")
+    try:
+        os.remove(f"backtests/{del_test}.txt")
+        click.echo(f"{del_test} Successfully Deleted")
+    except:
+        click.echo(f"Error deleting {del_test}")
+
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
+main.add_command(delete_test)
 
 def check_login():
     try:
