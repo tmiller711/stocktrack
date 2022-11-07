@@ -65,12 +65,15 @@ main.add_command(get_tests)
 main.add_command(create_test)
 
 def check_login():
-    with open('credentials.txt', 'r') as file:
-        data = json.loads(file.read())
-        r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
-        if r.ok:
-            click.echo("Already signed in and token is valid")
-            exit()
+    try:
+        with open('credentials.txt', 'r') as file:
+            data = json.loads(file.read())
+            r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
+            if r.ok:
+                click.echo("Already signed in and token is valid")
+                exit()
+    except:
+        pass
 
 @click.command(name='register')
 def register():
@@ -145,6 +148,18 @@ def account():
     else:
         click.echo("Error retrieving user data")
 
+@click.command(name='logout')
+def logout():
+    '''
+    Log out of account
+    '''
+    try:
+        os.remove(r'credentials.txt')
+        click.echo("Successfully logged out")
+    except:
+        click.echo("error logging out")
+
 main.add_command(register)
 main.add_command(login)
 main.add_command(account)
+main.add_command(logout)
