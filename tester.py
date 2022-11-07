@@ -3,12 +3,14 @@ import requests
 import json
 
 class Test:
-    def __init__(self, balance, stock, buy_criteria, sell_criteria, indicators):
+    def __init__(self, balance, stock, buy_criteria, sell_criteria, indicators, start_date, end_date):
         self.balance = balance
         self.stock = stock
         self.buy_criteria = buy_criteria
         self.sell_criteria = sell_criteria
         self.indicators = indicators
+        self.start_date = start_date
+        self.end_date = end_date
         self.data = self.retrieve_stock_data()
         self.num_of_shares = 0
         self.num_of_trades = 0
@@ -73,9 +75,8 @@ class Test:
         with open('credentials.txt', 'r') as file:
             data = file.read()
         token_dict = json.loads(data)
-        # print(token_dict['access'])
         headers = {"Authorization": f"Bearer {token_dict['access']}"}
-        r = requests.post(f"http://127.0.0.1:8000/api/{self.stock}/", json={'indicators': self.indicators}, headers=headers)
+        r = requests.post(f"http://127.0.0.1:8000/api/{self.stock}/", json={'indicators': self.indicators, 'start_date': self.start_date, 'end_date': self.end_date}, headers=headers)
         data = json.loads(r.text)
         data = pd.DataFrame(data=data)
 

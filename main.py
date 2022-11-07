@@ -5,6 +5,7 @@ import os
 from interpreter import Interpreter
 from tester import Test
 import json
+from datetime import date, timedelta, datetime
 
 @click.group()
 @click.version_option(package_name='stocktrack')
@@ -32,13 +33,17 @@ def run_test():
     '''
     # prompt user for test name
     test_name = click.prompt("What is the test you'd like to use?")
+    timeframe = click.prompt("How many years back would you like to test?", type=int)
     test_file = open(f'backtests/{test_name}.txt', 'r')
     # make a test to check if the file exists
     test = Interpreter(test_file)
     indicators = test.parse_indicators()
     (buy_criteria, sell_criteria) = test.parse_test_criteria()
 
-    run_commands = Test(1000, "SPY", buy_criteria, sell_criteria, indicators)
+    end_date = date.today()
+    start_date = end_date - timedelta(days=(timeframe*365))
+
+    run_commands = Test(1000, "SPY", buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
 
     run_commands.run_test()
     (ending_bal, num_of_trades) = run_commands.balance, run_commands.num_of_trades 
