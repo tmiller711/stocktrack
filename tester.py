@@ -1,11 +1,15 @@
 import pandas as pd
+import requests
+import json
 
 class Test:
-    def __init__(self, balance, buy_criteria, sell_criteria):
+    def __init__(self, balance, stock, buy_criteria, sell_criteria, indicators):
         self.balance = balance
+        self.stock = stock
         self.buy_criteria = buy_criteria
         self.sell_criteria = sell_criteria
-        self.data = pd.read_csv(r'data/spy.csv')
+        self.indicators = indicators
+        self.data = self.retrieve_stock_data()
         self.num_of_shares = 0
         self.num_of_trades = 0
 
@@ -64,3 +68,10 @@ class Test:
             return (int(data[criteria[0].upper()]) < int(criteria[2]))
         elif criteria[1] == '>':
             return (int(data[criteria[0].upper()]) > int(criteria[2]))
+    
+    def retrieve_stock_data(self):
+        r = requests.post(f"http://127.0.0.1:8000/api/{self.stock}/", json={'indicators': self.indicators})
+        data = json.loads(r.text)
+        data = pd.DataFrame(data=data)
+
+        return data

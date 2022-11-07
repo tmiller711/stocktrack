@@ -10,7 +10,9 @@ from .serializers import StockSerializer
 # Create your views here.
 
 class GetStockData(APIView):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        indicator_args = request.data.get('indicators')
         ticker = kwargs['tikr']
         try:
             stock = Stock.objects.get(ticker=ticker)
@@ -18,6 +20,10 @@ class GetStockData(APIView):
             return Response({"Error": "Stock not found"}, status=status.HTTP_404_NOT_FOUND)
 
         data = pd.read_csv(stock.stock_data)
-        print(data)
-        print(request.data)
-        return Response()
+        indicators = ['time', 'open', 'close', 'high', 'low']
+        for indicator in indicator_args:
+            indicators.append(indicator)
+        data = data[indicators]
+        # print(data)
+
+        return Response(data, status=status.HTTP_200_OK)

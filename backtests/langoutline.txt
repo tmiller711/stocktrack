@@ -1,11 +1,11 @@
-use rsi 21ma
+use RSI 100MA
 
 buy {
 	crossing rsi < 50
-	crossing ma < open_price
+	crossing 100ma < open_price
 }
 
 sell {
 	crossing rsi > 60
-	crossing ma > open_price
+	crossing 100ma > open_price
 }

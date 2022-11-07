@@ -27,18 +27,19 @@ def create_test(testname):
         # after they created the file present them with a text editor to make the test
 
 @click.command(name='run')
-@click.argument('testname', required=True)
-def run_test(testname):
+def run_test():
     '''
     Run a test
     '''
-    # have click prompt the user for the stock to run the test on
-    # maybe also prompt the user for what test to run instead of having to put it in on run
-    test_file = open(f'backtests/{testname}.txt', 'r')
+    # prompt user for test name
+    test_name = click.prompt("What is the test you'd like to use?")
+    test_file = open(f'backtests/{test_name}.txt', 'r')
     # make a test to check if the file exists
     test = Interpreter(test_file)
+    indicators = test.parse_indicators()
     (buy_criteria, sell_criteria) = test.parse_test_criteria()
-    run_commands = Test(1000, buy_criteria, sell_criteria)
+
+    run_commands = Test(1000, "SPY", buy_criteria, sell_criteria, indicators)
 
     run_commands.run_test()
     (ending_bal, num_of_trades) = run_commands.balance, run_commands.num_of_trades 

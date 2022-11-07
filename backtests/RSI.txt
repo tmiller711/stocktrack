@@ -1,4 +1,4 @@
-use rsi
+use RSI
 
 buy {
 	crossing rsi < 30	
