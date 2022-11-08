@@ -15,7 +15,6 @@ class GetStockData(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
         indicator_args = request.data.get('indicators')
         start_date = datetime.strptime(request.data.get('start_date'), "%Y-%m-%d").date()
         end_date = datetime.strptime(request.data.get('end_date'), "%Y-%m-%d").date()

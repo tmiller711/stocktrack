@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 import json
+import click
 
 class Test:
     def __init__(self, balance, stock, buy_criteria, sell_criteria, indicators, start_date, end_date):
@@ -61,7 +62,6 @@ class Test:
             self.num_of_trades += 1
 
         self.output += f"Number of trades: {self.num_of_trades} | Percent gain: {round((self.balance/1000)*100, 2)}%"
-        print(self.output)
 
     def crossing(self, data, criteria):
         # check the criteria/argument and if it is true return True
@@ -92,6 +92,15 @@ class Test:
 
         return data
 
-    def save_results(self):
-        with open(f"results/{self.stock}.txt", 'w') as file:
-            file.write(self.output)
+    def save_results(self, output=None):
+        if output:
+            if '.txt' in output:
+                output.replace('.txt', '')
+            with open(f"results/{output}.txt", 'w') as file:
+                file.write(self.output)
+                click.echo("Results of test saved at results/{output}.txt")
+        else:
+            # if no output file just echo results
+            click.echo(f"Num of Trades: {self.num_of_trades}")
+            click.echo(f"Ending Balance: ${self.balance}")
+            click.echo(f"Percent Gain: {round((self.balance/1000)*100, 2)}%")

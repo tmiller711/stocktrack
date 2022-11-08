@@ -27,10 +27,13 @@ def create_test(testname):
         # after they created the file present them with a text editor to make the test
 
 @click.command(name='run')
-def run_test():
+@click.option('-o', '--output')
+def run_test(output):
     '''
     Run a test
     '''
+    if output == None:
+        click.echo("No output selected. Printing results instead")
     # prompt user for test name
     test_name = click.prompt("What is the test you'd like to use?")
     timeframe = click.prompt("How many years back would you like to test?", type=int)
@@ -46,7 +49,7 @@ def run_test():
     run_commands = Test(1000, "SPY", buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
 
     run_commands.run_test()
-    run_commands.save_results()
+    run_commands.save_results(output)
 
     test_file.close()
 
