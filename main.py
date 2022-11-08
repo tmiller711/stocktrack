@@ -15,6 +15,20 @@ def main():
     """
     pass
 
+def check_token():
+    try:
+        with open('credentials.txt', 'r') as file:
+            data = json.loads(file.read())
+            r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
+            if r.ok:
+                click.echo("Already signed in and token is valid")
+            else:
+                click.echo("Not logged in")
+                exit()
+    except:
+        click.echo("Not logged in")
+        exit()
+
 @click.command(name='create')
 @click.argument('testname', required=True)
 def create_test(testname):
@@ -32,12 +46,18 @@ def run_test(output):
     '''
     Run a test
     '''
+    check_token()
     if output == None:
         click.echo("No output selected. Printing results instead")
     # prompt user for test name
     test_name = click.prompt("What is the test you'd like to use?")
+    try:
+        test_file = open(f'backtests/{test_name}.txt', 'r')
+    except:
+        click.echo(f"Test: '{test_name}.txt' does not exist")
+        exit()
     timeframe = click.prompt("How many years back would you like to test?", type=int)
-    test_file = open(f'backtests/{test_name}.txt', 'r')
+
     # make a test to check if the file exists
     test = Interpreter(test_file)
     indicators = test.parse_indicators()
@@ -159,8 +179,13 @@ def account():
     '''
     View account details
     '''
-    with open('credentials.txt', 'r') as file:
-        data = file.read()
+    try:
+        with open('credentials.txt', 'r') as file:
+            data = file.read()
+    except:
+        click.echo("Credentials do not exist, please login")
+        exit()
+
     token_dict = json.loads(data)
     # print(token_dict['access'])
     headers = {"Authorization": f"Bearer {token_dict['access']}"}
