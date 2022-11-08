@@ -46,9 +46,7 @@ def run_test():
     run_commands = Test(1000, "SPY", buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
 
     run_commands.run_test()
-    (ending_bal, num_of_trades) = run_commands.balance, run_commands.num_of_trades 
-    click.echo(ending_bal)
-    click.echo(num_of_trades)
+    run_commands.save_results()
 
     test_file.close()
 

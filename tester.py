@@ -14,6 +14,8 @@ class Test:
         self.data = self.retrieve_stock_data()
         self.num_of_shares = 0
         self.num_of_trades = 0
+        self.output = ""
+        self.output += f"Starting Balance: ${balance}\n"
 
     def run_test(self):
         for index, row in self.data.iterrows():
@@ -32,6 +34,7 @@ class Test:
                     # buy as many shares as I can
                     self.num_of_shares = self.balance/int(row['close'])
                     self.balance = 0
+                    self.output += f"{row['time']} | Bought {round(self.num_of_shares, 1)} shares @ ${row['close']}\n"
 
             else:
                 # look to sell
@@ -44,14 +47,21 @@ class Test:
                             break
                 if sell == True:
                     self.balance = self.num_of_shares*int(row['close'])
+                    self.output += f"{row['time']} | Sold {round(self.num_of_shares, 1)} shares @ ${row['close']}\n"
+                    self.output += f"Balance: ${int(self.balance)}\n"
                     self.num_of_shares = 0
                     self.num_of_trades += 1
 
 
         # if you still own shares after all of it sell it all at latest price
         if self.num_of_shares > 0:
+            self.output += f"{row['time']} | Sold {round(self.num_of_shares, 1)} shares @ ${int(self.data.iloc[-1]['close'])}\n"
             self.balance = self.num_of_shares* int(self.data.iloc[-1]['close'])
+            self.output += f"Balance: ${int(self.balance)}\n"
             self.num_of_trades += 1
+
+        self.output += f"Number of trades: {self.num_of_trades} | Percent gain: {round((self.balance/1000)*100, 2)}%"
+        print(self.output)
 
     def crossing(self, data, criteria):
         # check the criteria/argument and if it is true return True
@@ -81,3 +91,7 @@ class Test:
         data = pd.DataFrame(data=data)
 
         return data
+
+    def save_results(self):
+        with open(f"results/{self.stock}.txt", 'w') as file:
+            file.write(self.output)
