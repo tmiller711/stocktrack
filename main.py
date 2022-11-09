@@ -7,6 +7,8 @@ from tester import Test
 import json
 from datetime import date, timedelta, datetime
 import sys
+import texteditor
+import curses
 
 @click.group()
 @click.version_option(package_name='stocktrack')
@@ -36,8 +38,13 @@ def create_test(testname):
     '''
     Create a test
     '''
+    # check if the test already exists
+    if os.path.isfile(f"backtests/{testname}.txt"):
+        click.echo(click.style(f"Test '{testname}' already exists, Edit instead", fg='red'))
+        exit()
     # Create a file with the name they specified
     with open(f'backtests/{testname}.txt', 'w') as file:
+        curses.wrapper(texteditor.main, filename=rf"backtests/{testname}.txt")
         click.echo(click.style("file created", fg='green'))
         # after they created the file present them with a text editor to make the test
 
