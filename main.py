@@ -137,10 +137,31 @@ def delete_test():
     except:
         click.echo(click.style(f"Error deleting {del_test}", fg='red'))
 
+@click.command(name="results")
+def show_results():
+    '''
+    Show results of previous tests
+    '''
+    results = os.listdir('results')
+    if len(results) == 0:
+        click.echo(click.style("No results to show", fg='red'))
+        exit()
+
+    for result in results:
+        click.echo(click.style(result.replace(".txt", ''), fg='green'))
+
+    result_to_view = click.prompt("Which test would you like to view?")
+    try:
+        with open(f"results/{result_to_view}.txt", "r") as f:
+            print(f.read())
+    except:
+        click.echo(click.style("Could not find result", fg='red'))
+
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
 main.add_command(edit_test)
+main.add_command(show_results)
 main.add_command(delete_test)
 
 def check_login():

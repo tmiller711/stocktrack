@@ -86,11 +86,13 @@ class Buffer:
 
     def insert(self, cursor, string):
         row, col = cursor.row, cursor.col
-        try:
-            current = self.lines.pop(row)
-        except:
+        # try:
+        if self.lines == []:
             self.lines.append('')
-            current = self.lines[0]
+        current = self.lines.pop(row)
+        # except:
+            # self.lines.append('')
+            # current = self.lines.pop(row)
         new = current[:col] + string + current[col:]
         self.lines.insert(row, new)
 
@@ -104,7 +106,7 @@ class Buffer:
         row, col = cursor.row, cursor.col
         if (row, col) < (self.bottom, len(self[row])):
             current = self.lines.pop(row)
-            if col < len(self[row]):
+            if col < len(self[row-1]):
                 new = current[:col] + current[col + 1:]
                 self.lines.insert(row, new)
             else:

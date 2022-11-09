@@ -1,6 +1,7 @@
 Buy Criteria: ['crossing rsi < 50', 'crossing 100ma < open_price']
 Sell criteria: ['crossing rsi > 60', 'crossing 100ma > open_price']
 Starting Balance: $1000
+
 2013-02-25 | Bought 6.7 shares @ $149.0
 2015-10-16 | Sold 6.7 shares @ $203.27
 Balance: $1362

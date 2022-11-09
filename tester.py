@@ -103,5 +103,5 @@ class Test:
         else:
             # if no output file just echo results
             click.echo(f"Num of Trades: {self.num_of_trades}")
-            click.echo(f"Ending Balance: ${self.balance}")
+            click.echo(f"Ending Balance: ${round(self.balance, 2)}")
             click.echo(f"Percent Gain: {round((self.balance/1000)*100, 2)}%")
