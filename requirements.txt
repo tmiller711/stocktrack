@@ -2,3 +2,4 @@ pandas
 click
 django
 djangorestframework
+colorama

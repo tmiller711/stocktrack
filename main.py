@@ -6,6 +6,7 @@ from interpreter import Interpreter
 from tester import Test
 import json
 from datetime import date, timedelta, datetime
+import sys
 
 @click.group()
 @click.version_option(package_name='stocktrack')
@@ -21,12 +22,12 @@ def check_token():
             data = json.loads(file.read())
             r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
             if r.ok:
-                click.echo("Already signed in and token is valid")
+                pass
             else:
-                click.echo("Not logged in")
+                click.echo(click.style("Not logged in", fg='red'))
                 exit()
     except:
-        click.echo("Not logged in")
+        click.echo(click.style("Not logged in", fg='red'))
         exit()
 
 @click.command(name='create')
@@ -37,7 +38,7 @@ def create_test(testname):
     '''
     # Create a file with the name they specified
     with open(f'backtests/{testname}.txt', 'w') as file:
-        click.echo("file created")
+        click.echo(click.style("file created", fg='green'))
         # after they created the file present them with a text editor to make the test
 
 @click.command(name='run')
@@ -48,13 +49,13 @@ def run_test(output):
     '''
     check_token()
     if output == None:
-        click.echo("No output selected. Printing results instead")
+        click.echo(click.style("No output selected. Printing results instead", fg='blue'))
     # prompt user for test name
     test_name = click.prompt("What is the test you'd like to use?")
     try:
         test_file = open(f'backtests/{test_name}.txt', 'r')
     except:
-        click.echo(f"Test: '{test_name}.txt' does not exist")
+        click.echo(click.style(f"Test: '{test_name}.txt' does not exist", fg='red'))
         exit()
     timeframe = click.prompt("How many years back would you like to test?", type=int)
 
@@ -80,7 +81,7 @@ def get_tests():
     '''
     tests = os.listdir('backtests')
     if len(tests) == 0:
-        click.echo('User has not made any tests')
+        click.echo(click.style('User has not made any tests', fg='red'))
 
     else:
         for test in tests:
@@ -93,16 +94,16 @@ def delete_test():
     '''
     tests = os.listdir('backtests')
     if len(tests) == 0:
-        click.echo('User has no tests to delete')
+        click.echo(click.style('User has no tests to delete', fg='red'))
 
     for test in tests:
         click.echo(test.replace('.txt', ''))
     del_test = click.prompt("Which test would you like to delete?")
     try:
         os.remove(f"backtests/{del_test}.txt")
-        click.echo(f"{del_test} Successfully Deleted")
+        click.echo(click.style(f"{del_test} Successfully Deleted", fg='green'))
     except:
-        click.echo(f"Error deleting {del_test}")
+        click.echo(click.style(f"Error deleting {del_test}", fg='red'))
 
 main.add_command(run_test)
 main.add_command(get_tests)
@@ -115,7 +116,7 @@ def check_login():
             data = json.loads(file.read())
             r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
             if r.ok:
-                click.echo("Already signed in and token is valid")
+                click.echo(click.style("Already signed in and token is valid", fg='green'))
                 exit()
     except:
         pass
@@ -131,24 +132,24 @@ def register():
     # make a post request to the api to create a view
     email = click.prompt("Please enter the email to register", type=str)
     while '@' not in email or '.com' not in email:
-        email = click.prompt("Please enter a valid email")
+        email = click.prompt(click.style("Please enter a valid email", fg='red'))
 
     password1, password2 = '8', ''
     while password1 != password2 or len(password1) < 7:
         password1 = click.prompt("Password | Must be 7 character or more")
         password2 = click.prompt("Password (Confirm)")
         if password1 != password2:
-            click.echo("Passwords do not match, please try again")
+            click.echo(click.style("Passwords do not match, please try again", fg='red'))
 
     r = requests.post('http://127.0.0.1:8000/account/register', json={'email': email, 'password': password1})
     auth = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password1})
     if r.ok and auth.ok:
         with open('credentials.txt', 'w') as cred_file:
             cred_file.write(auth.text)
-            click.echo("Account successfully registered")
+            click.echo(click.style("Account successfully registered", fg='green'))
             click.echo("Login valid for 30 days")
     else:
-        click.echo("Error creating account, try again later")
+        click.echo(click.style("Error creating account, try again later", fg='red'))
 
 @click.command(name='login')
 def login():
@@ -160,7 +161,7 @@ def login():
 
     email = click.prompt("Please enter your email", type=str)
     while '@' not in email or '.com' not in email:
-        email = click.prompt("Please enter a valid email")
+        email = click.prompt(click.style("Please enter a valid email", fg='red'))
 
     password = click.prompt("Enter password")
 
@@ -169,10 +170,10 @@ def login():
         # save login token/credentials in file
         with open('credentials.txt', 'w') as cred_file:
             cred_file.write(r.text)
-            click.echo("Successfully Logged In")
+            click.echo(click.style("Successfully Logged In", fg='green'))
             click.echo("Login valid for 30 days")
     else:
-        click.echo("Error logging in")
+        click.echo(click.style("Error logging in", fg='red'))
 
 @click.command(name='account')
 def account():
@@ -183,7 +184,7 @@ def account():
         with open('credentials.txt', 'r') as file:
             data = file.read()
     except:
-        click.echo("Credentials do not exist, please login")
+        click.echo(click.style("Credentials do not exist, please login", fg='red'))
         exit()
 
     token_dict = json.loads(data)
@@ -196,7 +197,7 @@ def account():
         click.echo("User email:")
         click.echo(user_data['email'])
     else:
-        click.echo("Error retrieving user data")
+        click.echo(click.style("Error retrieving user data", fg='red'))
 
 @click.command(name='logout')
 def logout():
@@ -205,9 +206,9 @@ def logout():
     '''
     try:
         os.remove(r'credentials.txt')
-        click.echo("Successfully logged out")
+        click.echo(click.style("Successfully logged out", fg='green'))
     except:
-        click.echo("error logging out")
+        click.echo(click.style("error logging out", fg='red'))
 
 main.add_command(register)
 main.add_command(login)

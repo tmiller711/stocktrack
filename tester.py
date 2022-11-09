@@ -16,7 +16,8 @@ class Test:
         self.num_of_shares = 0
         self.num_of_trades = 0
         self.output = ""
-        self.output += f"Starting Balance: ${balance}\n"
+        self.output += f"Buy Criteria: {self.buy_criteria}\nSell criteria: {self.sell_criteria}\n"
+        self.output += f"Starting Balance: ${balance}\n\n"
 
     def run_test(self):
         for index, row in self.data.iterrows():
@@ -98,7 +99,7 @@ class Test:
                 output.replace('.txt', '')
             with open(f"results/{output}.txt", 'w') as file:
                 file.write(self.output)
-                click.echo("Results of test saved at results/{output}.txt")
+                click.echo(f"Results of test saved at results/{output}.txt")
         else:
             # if no output file just echo results
             click.echo(f"Num of Trades: {self.num_of_trades}")
