@@ -196,7 +196,7 @@ def login():
     while '@' not in email or '.com' not in email:
         email = click.prompt(click.style("Please enter a valid email", fg='red'))
 
-    password = click.prompt("Enter password")
+    password = click.prompt("Enter password", type=str, hide_input=True)
 
     r = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password})
     if r.ok:
