@@ -48,6 +48,31 @@ def create_test(testname):
         click.echo(click.style("file created", fg='green'))
         # after they created the file present them with a text editor to make the test
 
+@click.command(name='edit')
+def edit_test():
+    '''
+    Edit a previously made test
+    '''
+    # show user all tests they created
+    tests = os.listdir('backtests')
+    tests = [test.replace(".txt", "") for test in tests]
+    print(tests)
+    if len(tests) == 0:
+        click.echo(click.style('User has not made any tests', fg='red'))
+        exit()
+
+    for test in tests:
+        click.echo(test)
+
+    test_to_edit = click.prompt("Which test would you like to edit?")
+    if test_to_edit not in tests:
+        click.echo(click.style(f"Test '{test_to_edit}' does not exist", fg='red'))
+        exit()
+
+    # open editor with test
+    curses.wrapper(texteditor.main, filename=rf"backtests/{test_to_edit}.txt")
+
+
 @click.command(name='run')
 @click.option('-o', '--output')
 def run_test(output):
@@ -104,7 +129,7 @@ def delete_test():
         click.echo(click.style('User has no tests to delete', fg='red'))
 
     for test in tests:
-        click.echo(test.replace('.txt', ''))
+        click.echo(click.style(test.replace('.txt', ''), fg='green'))
     del_test = click.prompt("Which test would you like to delete?")
     try:
         os.remove(f"backtests/{del_test}.txt")
@@ -115,6 +140,7 @@ def delete_test():
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
+main.add_command(edit_test)
 main.add_command(delete_test)
 
 def check_login():
