@@ -1,7 +1,9 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 import requests
 import json
 import click
+from datetime import datetime, timedelta
 
 class Test:
     def __init__(self, balance, stock, buy_criteria, sell_criteria, indicators, start_date, end_date):
@@ -16,8 +18,9 @@ class Test:
         self.num_of_shares = 0
         self.num_of_trades = 0
         self.output = ""
-        self.output += f"Buy Criteria: {self.buy_criteria}\nSell criteria: {self.sell_criteria}\n"
-        self.output += f"Starting Balance: ${balance}\n\n"
+        self.output += f"\nBuy Criteria: {self.buy_criteria}\nSell criteria: {self.sell_criteria}\n"
+        self.output += f"Starting Balance: ${balance} | Running test on {self.stock}\n\n"
+        self.graph_output = {'date': [start_date], 'balance': [balance]}
 
     def run_test(self):
         for index, row in self.data.iterrows():
@@ -53,6 +56,8 @@ class Test:
                     self.output += f"Balance: ${int(self.balance)}\n"
                     self.num_of_shares = 0
                     self.num_of_trades += 1
+                    self.graph_output['date'].append(row['time'])
+                    self.graph_output['balance'].append(self.balance)
 
 
         # if you still own shares after all of it sell it all at latest price
@@ -63,7 +68,8 @@ class Test:
             self.num_of_trades += 1
 
         self.output += f"Number of trades: {self.num_of_trades} | Percent gain: {round((self.balance/1000)*100, 2)}%"
-
+        self.results_graph()
+        
     def crossing(self, data, criteria):
         # check the criteria/argument and if it is true return True
         criteria = criteria.split()
@@ -99,9 +105,26 @@ class Test:
                 output.replace('.txt', '')
             with open(f"results/{output}.txt", 'w') as file:
                 file.write(self.output)
+                file.write(self.buy_and_hold())
                 click.echo(f"Results of test saved at results/{output}.txt")
+                plt.plot(self.data['time'], self.data['close'])
+                plt.show()
         else:
             # if no output file just echo results
+            self.buy_and_hold()
             click.echo(f"Num of Trades: {self.num_of_trades}")
             click.echo(f"Ending Balance: ${round(self.balance, 2)}")
             click.echo(f"Percent Gain: {round((self.balance/1000)*100, 2)}%")
+
+    def buy_and_hold(self):
+        start_price = self.data.iloc[0]['close']
+        end_price = self.data.iloc[-1]['close']
+
+        return f"\n\nReturn if you just bought and held {self.stock} from {self.start_date} to {self.end_date}: {round((end_price/start_price)*100, 2)}%"
+
+    def results_graph(self):
+        df = pd.DataFrame(self.graph_output)
+        plt.plot(df['date'], df['balance'])
+
+        plt.show()
+

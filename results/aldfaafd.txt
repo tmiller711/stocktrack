@@ -1,0 +1,35 @@
+
+Buy Criteria: ['crossing rsi < 30']
+Sell criteria: ['crossing rsi > 70']
+Starting Balance: $1000 | Running test on SPY
+
+2012-11-14 | Bought 7.4 shares @ $135.9299
+2013-01-24 | Sold 7.4 shares @ $149.41
+Balance: $1103
+2014-10-15 | Bought 5.9 shares @ $186.43
+2014-11-18 | Sold 5.9 shares @ $205.55
+Balance: $1216
+2015-08-21 | Bought 6.2 shares @ $197.63
+2016-12-07 | Sold 6.2 shares @ $224.6
+Balance: $1383
+2018-02-05 | Bought 5.3 shares @ $263.93
+2018-08-29 | Sold 5.3 shares @ $291.48
+Balance: $1530
+2018-10-10 | Bought 5.5 shares @ $278.3
+2019-04-23 | Sold 5.5 shares @ $292.88
+Balance: $1607
+2019-08-05 | Bought 5.7 shares @ $283.82
+2019-11-15 | Sold 5.7 shares @ $311.79
+Balance: $1766
+2020-02-25 | Bought 5.7 shares @ $312.65
+2020-06-05 | Sold 5.7 shares @ $319.34
+Balance: $1806
+2022-01-21 | Bought 4.1 shares @ $437.98
+2022-08-12 | Sold 4.1 shares @ $427.1
+Balance: $1764
+2022-09-23 | Bought 4.8 shares @ $367.95
+2022-11-07 | Sold 4.8 shares @ $377
+Balance: $1812
+Number of trades: 9 | Percent gain: 181.29%
+
+Return if you just bought and held SPY from 2012-11-11 to 2022-11-09: 273.06%
