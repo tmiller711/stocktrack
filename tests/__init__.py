@@ -1,1 +1,1 @@
-from main import main
+from stocktrack import main

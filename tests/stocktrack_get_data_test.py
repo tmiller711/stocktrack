@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from main import main
+from stocktrack import main
 
 class TestTests(unittest.TestCase):
     def test1(self):
