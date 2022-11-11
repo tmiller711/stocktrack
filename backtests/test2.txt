@@ -1,9 +1,0 @@
-use RSI
-
-buy {
-	crossing rsi > 70
-}
-
-sell {
-	crossing rsi < 30
-}

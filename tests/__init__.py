@@ -1,1 +1,1 @@
-from tools.stocktrack import main
+from cli.stocktrack import main

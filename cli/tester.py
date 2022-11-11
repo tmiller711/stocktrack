@@ -4,6 +4,7 @@ import requests
 import json
 import click
 from datetime import datetime, timedelta
+import pathlib
 
 class Test:
     def __init__(self, balance, stock, buy_criteria, sell_criteria, indicators, start_date, end_date):
@@ -89,7 +90,8 @@ class Test:
             return (int(data[criteria[0].upper()]) > int(criteria[2]))
     
     def retrieve_stock_data(self):
-        with open('credentials.txt', 'r') as file:
+        path = pathlib.Path(__file__).parent.resolve()
+        with open(f"{path}/credentials.txt", 'r') as file:
             data = file.read()
         token_dict = json.loads(data)
         headers = {"Authorization": f"Bearer {token_dict['access']}"}
@@ -103,12 +105,10 @@ class Test:
         if output:
             if '.txt' in output:
                 output.replace('.txt', '')
-            with open(f"results/{output}.txt", 'w') as file:
+            with open(f"{output}.txt", 'w') as file:
                 file.write(self.output)
                 file.write(self.buy_and_hold())
-                click.echo(f"Results of test saved at results/{output}.txt")
-                plt.plot(self.data['time'], self.data['close'])
-                plt.show()
+                click.echo(f"Results of test saved at {output}.txt")
         else:
             # if no output file just echo results
             self.buy_and_hold()

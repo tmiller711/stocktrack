@@ -19,7 +19,7 @@ setup(
     ],
     entry_points='''
     [console_scripts]
-    stocktrack=tools.stocktrack:main
+    stocktrack=cli.stocktrack:main
     ''',
     include_package_data=True,
     package_data={'': ['backtests', 'results']},

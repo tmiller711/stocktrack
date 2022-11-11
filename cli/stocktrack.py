@@ -2,13 +2,14 @@ import click
 import requests
 import pandas as pd
 import os
-from tools.interpreter import Interpreter
-from tools.tester import Test
+from cli.interpreter import Interpreter
+from cli.tester import Test
 import json
 from datetime import date, timedelta, datetime
 import sys
-from tools.texteditor import main as texteditor
+from cli.texteditor import main as texteditor
 import curses
+import pathlib
 
 @click.group()
 @click.version_option(package_name='stocktrack')
@@ -19,8 +20,9 @@ def main():
     pass
 
 def check_token():
+    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open('credentials.txt', 'r') as file:
+        with open(f"{path}/credentials.txt", 'r') as file:
             data = json.loads(file.read())
             r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
             if r.ok:
@@ -32,6 +34,24 @@ def check_token():
         click.echo(click.style("Not logged in", fg='red'))
         exit()
 
+def get_test_dir():
+    path = pathlib.Path(__file__).parent.resolve()
+    try:
+        with open(f"{path}/test_dir.txt", "r") as f:
+            return f.read().strip()
+    except:
+        click.echo(click.style("Need to specify directory to tests, run 'stocktrack setdir'", fg='red'))
+        quit()
+
+def get_results_dir():
+    path = pathlib.Path(__file__).parent.resolve()
+    try:
+        with open(f"{path}/results_dir.txt", "r") as f:
+            return f.read().strip()
+    except:
+        click.echo(click.style("Need to specify directory to results, run 'stocktrack setdir'", fg='red'))
+        quit()
+
 @click.command(name='create')
 @click.argument('testname', required=True)
 def create_test(testname):
@@ -39,12 +59,14 @@ def create_test(testname):
     Create a test
     '''
     # check if the test already exists
-    if os.path.isfile(f"backtests/{testname}.txt"):
+    test_dir = get_test_dir()
+
+    if os.path.isfile(f"{test_dir}/{testname}.txt"):
         click.echo(click.style(f"Test '{testname}' already exists, Edit instead", fg='red'))
         exit()
     # Create a file with the name they specified
-    with open(f'backtests/{testname}.txt', 'w') as file:
-        curses.wrapper(texteditor, filename=rf"backtests/{testname}.txt")
+    with open(f'{test_dir}/{testname}.txt', 'w') as file:
+        curses.wrapper(texteditor, filename=rf"{test_dir}/{testname}.txt")
         click.echo(click.style("file created", fg='green'))
         # after they created the file present them with a text editor to make the test
 
@@ -54,9 +76,9 @@ def edit_test():
     Edit a previously made test
     '''
     # show user all tests they created
-    tests = os.listdir('backtests')
+    test_dir = get_test_dir()
+    tests = os.listdir(test_dir)
     tests = [test.replace(".txt", "") for test in tests]
-    print(tests)
     if len(tests) == 0:
         click.echo(click.style('User has not made any tests', fg='red'))
         exit()
@@ -70,7 +92,7 @@ def edit_test():
         exit()
 
     # open editor with test
-    curses.wrapper(texteditor, filename=rf"backtests/{test_to_edit}.txt")
+    curses.wrapper(texteditor, filename=rf"{test_dir}/{test_to_edit}.txt")
 
 
 @click.command(name='run')
@@ -79,13 +101,15 @@ def run_test(output):
     '''
     Run a test
     '''
+    test_dir = get_test_dir()
+    results_dir = get_results_dir()
     check_token()
     if output == None:
         click.echo(click.style("No output selected. Printing results instead", fg='blue'))
     # prompt user for test name
     test_name = click.prompt("What is the test you'd like to use?")
     try:
-        test_file = open(f'backtests/{test_name}.txt', 'r')
+        test_file = open(f'{test_dir}/{test_name}.txt', 'r')
     except:
         click.echo(click.style(f"Test: '{test_name}.txt' does not exist", fg='red'))
         exit()
@@ -102,6 +126,9 @@ def run_test(output):
     run_commands = Test(1000, "SPY", buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
 
     run_commands.run_test()
+
+    if output:
+        output = results_dir + "/" + output
     run_commands.save_results(output)
 
     test_file.close()
@@ -111,7 +138,8 @@ def get_tests():
     '''
     Display all user created tests
     '''
-    tests = os.listdir('backtests')
+    test_dir = get_test_dir()
+    tests = os.listdir(test_dir)
     if len(tests) == 0:
         click.echo(click.style('User has not made any tests', fg='red'))
 
@@ -124,7 +152,8 @@ def delete_test():
     '''
     Delete a back test
     '''
-    tests = os.listdir('backtests')
+    test_dir = get_test_dir()
+    tests = os.listdir(test_dir)
     if len(tests) == 0:
         click.echo(click.style('User has no tests to delete', fg='red'))
 
@@ -132,7 +161,7 @@ def delete_test():
         click.echo(click.style(test.replace('.txt', ''), fg='green'))
     del_test = click.prompt("Which test would you like to delete?")
     try:
-        os.remove(f"backtests/{del_test}.txt")
+        os.remove(f"{test_dir}/{del_test}.txt")
         click.echo(click.style(f"{del_test} Successfully Deleted", fg='green'))
     except:
         click.echo(click.style(f"Error deleting {del_test}", fg='red'))
@@ -157,12 +186,27 @@ def show_results():
     except:
         click.echo(click.style("Could not find result", fg='red'))
 
+@click.command(name='setdir')
+def set_directory():
+    '''
+    Sets the directory of tests and results
+    '''
+    path = pathlib.Path(__file__).parent.resolve()
+    test_dir = click.prompt("What is the full path to the directory for where you want to store tests?")
+    with open(f"{path}/test_dir.txt", 'w') as file:
+        file.write(test_dir)
+
+    results_dir = click.prompt("What is the full path to the directory to store results?")
+    with open(f"{path}/results_dir.txt", 'w') as file:
+        file.write(results_dir)
+
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
 main.add_command(edit_test)
 main.add_command(show_results)
 main.add_command(delete_test)
+main.add_command(set_directory)
 
 def check_login():
     try:
@@ -198,7 +242,7 @@ def register():
     r = requests.post('http://127.0.0.1:8000/account/register', json={'email': email, 'password': password1})
     auth = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password1})
     if r.ok and auth.ok:
-        with open('credentials.txt', 'w') as cred_file:
+        with open('cli/credentials.txt', 'w') as cred_file:
             cred_file.write(auth.text)
             click.echo(click.style("Account successfully registered", fg='green'))
             click.echo("Login valid for 30 days")
@@ -222,7 +266,7 @@ def login():
     r = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password})
     if r.ok:
         # save login token/credentials in file
-        with open('credentials.txt', 'w') as cred_file:
+        with open('cli/credentials.txt', 'w') as cred_file:
             cred_file.write(r.text)
             click.echo(click.style("Successfully Logged In", fg='green'))
             click.echo("Login valid for 30 days")
@@ -235,7 +279,7 @@ def account():
     View account details
     '''
     try:
-        with open('credentials.txt', 'r') as file:
+        with open('cli/credentials.txt', 'r') as file:
             data = file.read()
     except:
         click.echo(click.style("Credentials do not exist, please login", fg='red'))
