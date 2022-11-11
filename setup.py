@@ -9,7 +9,7 @@ setup(
         'requests',
         'pandas',
         'matplotlib',
-        'colorma'
+        'colorama'
     ],
     entry_points='''
     [console_scripts]
