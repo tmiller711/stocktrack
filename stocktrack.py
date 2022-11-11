@@ -2,12 +2,12 @@ import click
 import requests
 import pandas as pd
 import os
-from interpreter import Interpreter
-from tester import Test
+from tools.interpreter import Interpreter
+from tools.tester import Test
 import json
 from datetime import date, timedelta, datetime
 import sys
-import texteditor
+from tools.texteditor import main as texteditor
 import curses
 
 @click.group()
@@ -44,7 +44,7 @@ def create_test(testname):
         exit()
     # Create a file with the name they specified
     with open(f'backtests/{testname}.txt', 'w') as file:
-        curses.wrapper(texteditor.main, filename=rf"backtests/{testname}.txt")
+        curses.wrapper(texteditor, filename=rf"backtests/{testname}.txt")
         click.echo(click.style("file created", fg='green'))
         # after they created the file present them with a text editor to make the test
 
@@ -70,7 +70,7 @@ def edit_test():
         exit()
 
     # open editor with test
-    curses.wrapper(texteditor.main, filename=rf"backtests/{test_to_edit}.txt")
+    curses.wrapper(texteditor, filename=rf"backtests/{test_to_edit}.txt")
 
 
 @click.command(name='run')

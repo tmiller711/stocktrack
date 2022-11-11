@@ -13,6 +13,6 @@ setup(
     ],
     entry_points='''
     [console_scripts]
-    stocktrack=main:main
+    stocktrack=stocktrack:main
     '''
     )

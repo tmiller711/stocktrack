@@ -1,7 +1,0 @@
-pandas
-click
-django
-djangorestframework
-colorama
-matplotlib
-curses
