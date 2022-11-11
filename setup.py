@@ -6,7 +6,10 @@ setup(
     packages=find_packages(),
     install_requires=[
         'click',
-        'requests'
+        'requests',
+        'pandas',
+        'matplotlib',
+        'colorma'
     ],
     entry_points='''
     [console_scripts]
