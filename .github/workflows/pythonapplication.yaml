@@ -27,5 +27,5 @@ jobs:
         with:
           python-version: "3.x"
       - uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_TOKEN }}
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
