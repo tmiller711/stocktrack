@@ -1,1 +1,1 @@
-/home/tristin/Music/Results
+/home/tristin/Documents/Coding/Python/StockTrack/Results

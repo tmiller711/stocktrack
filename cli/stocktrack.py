@@ -171,7 +171,8 @@ def show_results():
     '''
     Show results of previous tests
     '''
-    results = os.listdir('results')
+    path = pathlib.Path(__file__).parent.resolve()
+    results = os.listdir(f'{path}/Results')
     if len(results) == 0:
         click.echo(click.style("No results to show", fg='red'))
         exit()
@@ -209,8 +210,9 @@ main.add_command(delete_test)
 main.add_command(set_directory)
 
 def check_login():
+    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open('credentials.txt', 'r') as file:
+        with open(f'{path}/credentials.txt', 'r') as file:
             data = json.loads(file.read())
             r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
             if r.ok:
@@ -302,8 +304,9 @@ def logout():
     '''
     Log out of account
     '''
+    path = pathlib.Path(__file__).parent.resolve()
     try:
-        os.remove(r'credentials.txt')
+        os.remove(fr"{path}/credentials.txt")
         click.echo(click.style("Successfully logged out", fg='green'))
     except:
         click.echo(click.style("error logging out", fg='red'))
