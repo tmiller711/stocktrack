@@ -1,5 +1,5 @@
 import unittest
-import stocktrack from stocktrack
+from stocktrack import stocktrack
 
 class TestTests(unittest.TestCase):
     def test1():
