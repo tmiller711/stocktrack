@@ -1,11 +1,12 @@
 import unittest
-from stocktrack import stocktrack
+from click.testing import CliRunner
+from main import main
 
 class TestTests(unittest.TestCase):
-    def test1():
+    def test1(self):
         runner = CliRunner()
-        runner.invoke(stocktrack)
-        self.assertEqual(result.exit_code == 0)
+        result = runner.invoke(main)
+        self.assertEqual(result.exit_code, 0)
 
 if __name__ == "__main__":
     unittest.main()
