@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 import os
 from cli.interpreter import Interpreter
-from cli.tester import Test
+from cli.tester import Test, HandleResults
 import json
 from datetime import date, timedelta, datetime
 import sys
@@ -124,13 +124,17 @@ def run_test(output):
     end_date = date.today()
     start_date = end_date - timedelta(days=(timeframe*365))
 
-    run_commands = Test(1000, stock, buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
+    run_commands = Test(stock, buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
 
-    run_commands.run_test()
+    results, graph_data = run_commands.run_test()
 
+    o = HandleResults(results, graph_data)
     if output:
         output = results_dir + "/" + output
-    run_commands.save_results(output)
+        o.save_results(output)
+    else:
+        o.print_results()
+        o.show_graph()
 
     test_file.close()
 
@@ -184,7 +188,7 @@ def show_results():
     result_to_view = click.prompt("Which test would you like to view?")
     try:
         with open(f"{results_dir}/{result_to_view}.txt", "r") as f:
-            print(f.read())
+            click.echo(f.read())
     except:
         click.echo(click.style("Could not find result", fg='red'))
 
