@@ -172,8 +172,8 @@ def show_results():
     '''
     Show results of previous tests
     '''
-    path = pathlib.Path(__file__).parent.resolve()
-    results = os.listdir(f'{path}/Results')
+    results_dir = get_results_dir()
+    results = os.listdir(f'{results_dir}')
     if len(results) == 0:
         click.echo(click.style("No results to show", fg='red'))
         exit()
@@ -183,7 +183,7 @@ def show_results():
 
     result_to_view = click.prompt("Which test would you like to view?")
     try:
-        with open(f"results/{result_to_view}.txt", "r") as f:
+        with open(f"{results_dir}/{result_to_view}.txt", "r") as f:
             print(f.read())
     except:
         click.echo(click.style("Could not find result", fg='red'))
