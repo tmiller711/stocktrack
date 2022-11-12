@@ -66,33 +66,32 @@ def create_test(testname):
         exit()
     # Create a file with the name they specified
     with open(f'{test_dir}/{testname}.txt', 'w') as file:
-        curses.wrapper(texteditor, filename=rf"{test_dir}/{testname}.txt")
-        click.echo(click.style("file created", fg='green'))
+        click.echo(click.style(f"{testname} created at {test_dir}", fg='green'))
         # after they created the file present them with a text editor to make the test
 
-@click.command(name='edit')
-def edit_test():
-    '''
-    Edit a previously made test
-    '''
-    # show user all tests they created
-    test_dir = get_test_dir()
-    tests = os.listdir(test_dir)
-    tests = [test.replace(".txt", "") for test in tests]
-    if len(tests) == 0:
-        click.echo(click.style('User has not made any tests', fg='red'))
-        exit()
+# @click.command(name='edit')
+# def edit_test():
+#     '''
+#     Edit a previously made test
+#     '''
+#     # show user all tests they created
+#     test_dir = get_test_dir()
+#     tests = os.listdir(test_dir)
+#     tests = [test.replace(".txt", "") for test in tests]
+#     if len(tests) == 0:
+#         click.echo(click.style('User has not made any tests', fg='red'))
+#         exit()
 
-    for test in tests:
-        click.echo(test)
+#     for test in tests:
+#         click.echo(test)
 
-    test_to_edit = click.prompt("Which test would you like to edit?")
-    if test_to_edit not in tests:
-        click.echo(click.style(f"Test '{test_to_edit}' does not exist", fg='red'))
-        exit()
+#     test_to_edit = click.prompt("Which test would you like to edit?")
+#     if test_to_edit not in tests:
+#         click.echo(click.style(f"Test '{test_to_edit}' does not exist", fg='red'))
+#         exit()
 
-    # open editor with test
-    curses.wrapper(texteditor, filename=rf"{test_dir}/{test_to_edit}.txt")
+#     # open editor with test
+#     curses.wrapper(texteditor, filename=rf"{test_dir}/{test_to_edit}.txt")
 
 
 @click.command(name='run')
@@ -113,6 +112,8 @@ def run_test(output):
     except:
         click.echo(click.style(f"Test: '{test_name}.txt' does not exist", fg='red'))
         exit()
+    click.echo(f"Available stocks: {avail_stocks()}")
+    stock = click.prompt("What stock would you like to test on?")
     timeframe = click.prompt("How many years back would you like to test?", type=int)
 
     # make a test to check if the file exists
@@ -123,7 +124,7 @@ def run_test(output):
     end_date = date.today()
     start_date = end_date - timedelta(days=(timeframe*365))
 
-    run_commands = Test(1000, "SPY", buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
+    run_commands = Test(1000, stock, buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
 
     run_commands.run_test()
 
@@ -201,23 +202,21 @@ def set_directory():
     with open(f"{path}/results_dir.txt", 'w') as file:
         file.write(results_dir)
 
-@click.command(name="stocks")
-def view_stocks():
+def avail_stocks():
     '''
     View all available stocks to test
     '''
     r = requests.get('http://127.0.0.1:8000/api/stocks/')
     stocks = r.text.replace('"', "")    
-    click.echo(stocks)
+    return stocks
 
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
-main.add_command(edit_test)
+# main.add_command(edit_test)
 main.add_command(show_results)
 main.add_command(delete_test)
 main.add_command(set_directory)
-main.add_command(view_stocks)
 
 def check_login():
     path = pathlib.Path(__file__).parent.resolve()
