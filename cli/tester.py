@@ -35,6 +35,10 @@ class Test:
                         buy = self.crossing(row, criteria.split(' ', 1)[1])
                         if buy == False:
                             break
+                    if 'divergence' in criteria:
+                        buy = self.divergence(row, criteria.split(' ', 1)[1])
+                        if buy == False:
+                            break
                         
                 if buy == True:
                     # buy as many shares as I can
@@ -51,6 +55,11 @@ class Test:
                         sell = self.crossing(row, criteria.split(' ', 1)[1])
                         if sell == False:
                             break
+                    if 'divergence' in criteria:
+                        sell = sell.crossing(row, criteria.split(' ', 1)[1])
+                        if sell == False:
+                            break
+
                 if sell == True:
                     self.balance = self.num_of_shares*int(row['close'])
                     self.output += f"{row['time']} | Sold {round(self.num_of_shares, 1)} shares @ ${row['close']}\n"
@@ -75,19 +84,33 @@ class Test:
         # check the criteria/argument and if it is true return True
         criteria = criteria.split()
         # replace variables with their values
-        if criteria[2] == 'open_price':
-            criteria[2] = int(data['open'])
-        elif criteria[2] == 'close_price':
-            criteria[2] = int(data['close'])
-        elif criteria[2] == 'high_price':
-            criteria[2] = int(data['high'])
-        elif criteria[2] == 'low_price':
-            criteria[2] = int(data['low'])
+        if criteria[2] in ['open', 'close', 'high', 'low']:
+            criteria[2] = int(data[criteria[2]])
+        if criteria[2] in self.indicators:
+            criteria[2] = int(data[criteria[2]])
 
         if criteria[1] == '<':
-            return (int(data[criteria[0].upper()]) < int(criteria[2]))
+            return (int(data[criteria[0]]) < int(criteria[2]))
         elif criteria[1] == '>':
-            return (int(data[criteria[0].upper()]) > int(criteria[2]))
+            return (int(data[criteria[0]]) > int(criteria[2]))
+
+    def divergence(self, data, criteria):
+        criteria = criteria.split()
+        # get the value 30 rows before the current one or none
+        index = self.data.loc[self.data['time'] == data['time']].index
+        if index <= int(criteria[2]):
+            return False
+
+        x_days_ago_data = self.data.iloc[index-int(criteria[2])]
+
+        if criteria[0] == 'bull':
+            # check if price is lower than it was 30 days ago but rsi is higher than it was 30 days ago
+            if int(data['close']) < int(x_days_ago_data['close']) and int(data[criteria[1]]) > int(x_days_ago_data[criteria[1]]):
+                return True
+        
+        if criteria[0] == 'bear':
+            if int(data['close']) > int(x_days_ago_data['close']) and int(data[criteria[1]]) < int(x_days_ago_data[criteria[1]]):
+                return True
     
     def retrieve_stock_data(self):
         path = pathlib.Path(__file__).parent.resolve()

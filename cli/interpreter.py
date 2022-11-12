@@ -1,9 +1,9 @@
 class Interpreter():
     def __init__(self, test):
         self.test = test
-        self.available_indicators = ['RSI', '100MA']
+        self.available_indicators = ['rsi', '100ma', 'macd', 'signal', 'volume', 'volumema']
         self.used_indicators = []
-        self.available_commands = ['crossing']
+        self.available_commands = ['crossing', 'divergence']
         self.buy_criteria = []
         self.sell_criteria = []
 

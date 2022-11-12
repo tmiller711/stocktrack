@@ -1,0 +1,11 @@
+use macd signal
+
+buy {
+	crossing macd > signal
+}
+
+sell {
+	crossing macd < signal
+}
+
+

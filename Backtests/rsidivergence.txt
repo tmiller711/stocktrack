@@ -1,7 +1,7 @@
 use rsi
 
 buy {
-	crossing rsi < 30
+	divergence bull rsi 15
 }
 
 sell {
