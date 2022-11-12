@@ -201,6 +201,15 @@ def set_directory():
     with open(f"{path}/results_dir.txt", 'w') as file:
         file.write(results_dir)
 
+@click.command(name="stocks")
+def view_stocks():
+    '''
+    View all available stocks to test
+    '''
+    r = requests.get('http://127.0.0.1:8000/api/stocks/')
+    stocks = r.text.replace('"', "")    
+    click.echo(stocks)
+
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
@@ -208,6 +217,7 @@ main.add_command(edit_test)
 main.add_command(show_results)
 main.add_command(delete_test)
 main.add_command(set_directory)
+main.add_command(view_stocks)
 
 def check_login():
     path = pathlib.Path(__file__).parent.resolve()
@@ -227,6 +237,7 @@ def register():
     Register new account
     '''
     # check if user already logged in/token is valid
+    path = pathlib.Path(__file__).parent.resolve()
     check_login()
 
     # make a post request to the api to create a view
@@ -244,7 +255,7 @@ def register():
     r = requests.post('http://127.0.0.1:8000/account/register', json={'email': email, 'password': password1})
     auth = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password1})
     if r.ok and auth.ok:
-        with open('cli/credentials.txt', 'w') as cred_file:
+        with open(f'{path}/credentials.txt', 'w') as cred_file:
             cred_file.write(auth.text)
             click.echo(click.style("Account successfully registered", fg='green'))
             click.echo("Login valid for 30 days")
@@ -256,7 +267,7 @@ def login():
     '''
     Login to account
     '''
-    # before logging in make a request to api/token and if it returns ok then don't let the user log in as they already are and their token is still valid
+    path = pathlib.Path(__file__).parent.resolve()
     check_login()
 
     email = click.prompt("Please enter your email", type=str)
@@ -268,7 +279,7 @@ def login():
     r = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password})
     if r.ok:
         # save login token/credentials in file
-        with open('cli/credentials.txt', 'w') as cred_file:
+        with open(f'{path}/credentials.txt', 'w') as cred_file:
             cred_file.write(r.text)
             click.echo(click.style("Successfully Logged In", fg='green'))
             click.echo("Login valid for 30 days")
@@ -280,8 +291,9 @@ def account():
     '''
     View account details
     '''
+    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open('cli/credentials.txt', 'r') as file:
+        with open(f'{path}/credentials.txt', 'r') as file:
             data = file.read()
     except:
         click.echo(click.style("Credentials do not exist, please login", fg='red'))
