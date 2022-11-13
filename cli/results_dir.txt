@@ -1,1 +1,1 @@
-/home/tristin/Documents/Coding/Python/StockTrack
+/home/tristin/Documents/Coding/Python/StockTrack/Results

@@ -1,0 +1,9 @@
+use rsi
+
+buy {
+	crossing rsi < 30
+}
+
+sell {
+	tp 5% sl -2%
+}

@@ -1,0 +1,9 @@
+use rsi
+
+buy {
+	divergence bull rsi 15
+}
+
+sell {
+	tp 5% sl -3%
+}

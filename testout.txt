@@ -1,8 +1,0 @@
-
-Buy Criteria: []
-Sell criteria: []
-Starting Balance: $1000 | Running test on SPY
-
-Number of trades: 0 | Percent gain: 100.0%
-
-Return if you just bought and held SPY from 2012-11-14 to 2022-11-12: 277.75%

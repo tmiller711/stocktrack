@@ -5,7 +5,7 @@ buy {
 }
 
 sell {
-	crossing macd < signal
+	tp 7% sl -2%
 }
 
 

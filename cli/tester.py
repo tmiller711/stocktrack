@@ -40,6 +40,7 @@ class Test:
         self.data = self.retrieve_stock_data()
         self.num_of_shares = 0
         self.num_of_trades = 0
+        self.last_buy_price = 0
         self.output = ""
         self.output += f"\nBuy Criteria: {self.buy_criteria}\nSell criteria: {self.sell_criteria}\n"
         self.output += f"Starting Balance: ${self.balance} | Running test on {self.stock}\n\n"
@@ -65,6 +66,7 @@ class Test:
                 if buy == True:
                     # buy as many shares as I can
                     self.num_of_shares = self.balance/int(row['close'])
+                    self.last_buy_price = row['close']
                     self.balance = 0
                     self.output += f"{row['time']} | Bought {round(self.num_of_shares, 1)} shares @ ${row['close']}\n"
 
@@ -79,6 +81,10 @@ class Test:
                             break
                     if 'divergence' in criteria:
                         sell = sell.crossing(row, criteria.split(' ', 1)[1])
+                        if sell == False:
+                            break
+                    if 'tp' in criteria or 'sl' in criteria:
+                        sell = self.tp_sl(row, criteria.split(' '))
                         if sell == False:
                             break
 
@@ -135,6 +141,17 @@ class Test:
         if criteria[0] == 'bear':
             if int(data['close']) > int(x_days_ago_data['close']) and int(data[criteria[1]]) < int(x_days_ago_data[criteria[1]]):
                 return True
+
+    def tp_sl(self, data, criteria):
+        # if sl or tp is hit sell/ return True
+        take_profit = int(criteria[1].replace('%', ''))
+        stop_loss = int(criteria[3].replace('%', ''))
+        # check both closing price and high price
+        if calc_percent_diff(data['close'], self.last_buy_price) >= take_profit or calc_percent_diff(data['high'], self.last_buy_price) >= take_profit:
+            return True
+        
+        elif calc_percent_diff(data['close'], self.last_buy_price) <= stop_loss or calc_percent_diff(data['low'], self.last_buy_price) <= stop_loss:
+            return True
     
     def retrieve_stock_data(self):
         path = pathlib.Path(__file__).parent.resolve()
@@ -153,3 +170,12 @@ class Test:
         end_price = self.data.iloc[-1]['close']
 
         return f"\n\nReturn if you just bought and held {self.stock} from {self.start_date} to {self.end_date}: {round((end_price/start_price)*100, 2)}%"
+
+
+def calc_percent_diff(current, previous):
+    if current == previous:
+        return 0
+    try:
+        return ((current - previous) / previous) * 100.0
+    except ZeroDivisionError:
+        return 0

@@ -11,6 +11,9 @@ from cli.texteditor import main as texteditor
 import curses
 import pathlib
 
+def get_path():
+    return pathlib.Path(__file__).parent.resolve()
+
 @click.group()
 @click.version_option(package_name='stocktrack')
 def main():
@@ -20,9 +23,8 @@ def main():
     pass
 
 def check_token():
-    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open(f"{path}/credentials.txt", 'r') as file:
+        with open(f"{get_path()}/credentials.txt", 'r') as file:
             data = json.loads(file.read())
             r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
             if r.ok:
@@ -35,18 +37,16 @@ def check_token():
         exit()
 
 def get_test_dir():
-    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open(f"{path}/test_dir.txt", "r") as f:
+        with open(f"{get_path()}/test_dir.txt", "r") as f:
             return f.read().strip()
     except:
         click.echo(click.style("Need to specify directory to tests, run 'stocktrack setdir'", fg='red'))
         quit()
 
 def get_results_dir():
-    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open(f"{path}/results_dir.txt", "r") as f:
+        with open(f"{get_path()}/results_dir.txt", "r") as f:
             return f.read().strip()
     except:
         click.echo(click.style("Need to specify directory to results, run 'stocktrack setdir'", fg='red'))
@@ -197,13 +197,12 @@ def set_directory():
     '''
     Sets the directory of tests and results
     '''
-    path = pathlib.Path(__file__).parent.resolve()
     test_dir = click.prompt("What is the full path to the directory for where you want to store tests?")
-    with open(f"{path}/test_dir.txt", 'w') as file:
+    with open(f"{get_path()}/test_dir.txt", 'w') as file:
         file.write(test_dir)
 
     results_dir = click.prompt("What is the full path to the directory to store results?")
-    with open(f"{path}/results_dir.txt", 'w') as file:
+    with open(f"{get_path()}/results_dir.txt", 'w') as file:
         file.write(results_dir)
 
 def avail_stocks():
@@ -223,9 +222,8 @@ main.add_command(delete_test)
 main.add_command(set_directory)
 
 def check_login():
-    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open(f'{path}/credentials.txt', 'r') as file:
+        with open(f'{get_path()}/credentials.txt', 'r') as file:
             data = json.loads(file.read())
             r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
             if r.ok:
@@ -240,7 +238,6 @@ def register():
     Register new account
     '''
     # check if user already logged in/token is valid
-    path = pathlib.Path(__file__).parent.resolve()
     check_login()
 
     # make a post request to the api to create a view
@@ -258,7 +255,7 @@ def register():
     r = requests.post('http://127.0.0.1:8000/account/register', json={'email': email, 'password': password1})
     auth = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password1})
     if r.ok and auth.ok:
-        with open(f'{path}/credentials.txt', 'w') as cred_file:
+        with open(f'{get_path()}/credentials.txt', 'w') as cred_file:
             cred_file.write(auth.text)
             click.echo(click.style("Account successfully registered", fg='green'))
             click.echo("Login valid for 30 days")
@@ -270,7 +267,6 @@ def login():
     '''
     Login to account
     '''
-    path = pathlib.Path(__file__).parent.resolve()
     check_login()
 
     email = click.prompt("Please enter your email", type=str)
@@ -282,7 +278,7 @@ def login():
     r = requests.post('http://127.0.0.1:8000/api/token/', json={'email': email, 'password': password})
     if r.ok:
         # save login token/credentials in file
-        with open(f'{path}/credentials.txt', 'w') as cred_file:
+        with open(f'{get_path()}/credentials.txt', 'w') as cred_file:
             cred_file.write(r.text)
             click.echo(click.style("Successfully Logged In", fg='green'))
             click.echo("Login valid for 30 days")
@@ -294,9 +290,8 @@ def account():
     '''
     View account details
     '''
-    path = pathlib.Path(__file__).parent.resolve()
     try:
-        with open(f'{path}/credentials.txt', 'r') as file:
+        with open(f'{get_path()}/credentials.txt', 'r') as file:
             data = file.read()
     except:
         click.echo(click.style("Credentials do not exist, please login", fg='red'))
@@ -319,9 +314,8 @@ def logout():
     '''
     Log out of account
     '''
-    path = pathlib.Path(__file__).parent.resolve()
     try:
-        os.remove(fr"{path}/credentials.txt")
+        os.remove(fr"{get_path()}/credentials.txt")
         click.echo(click.style("Successfully logged out", fg='green'))
     except:
         click.echo(click.style("error logging out", fg='red'))
