@@ -4,12 +4,11 @@ from cli.stocktrack import main
 import pathlib
 
 class StockTrackTests(unittest.TestCase):
-    pass
-    # def test_dirs(self):
-    #     runner = CliRunner()
-    #     path = pathlib.Path(__file__).parent.resolve()
-    #     result = runner.invoke(main, ['setdir'], input=f"{path}\n{path}")
-    #     self.assertEqual(result.exit_code, 0)
+    def test_dirs(self):
+        runner = CliRunner()
+        path = pathlib.Path(__file__).parent.resolve()
+        result = runner.invoke(main, ['setdir'], input=f"{path}\n{path}")
+        self.assertEqual(result.exit_code, 0)
 
     # def test_create(self):
     #     runner = CliRunner()

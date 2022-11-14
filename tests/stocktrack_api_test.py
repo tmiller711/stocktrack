@@ -9,13 +9,13 @@ class StockTrackTests(unittest.TestCase):
     #     assert "Account successfully registered" in result.output
     #     self.assertEqual(result.exit_code, 0)
 
-    def test_login(self):
-        runner = CliRunner()
-        result = runner.invoke(main, ['login'], input="supertest@gmail.com\nsupertest123")
-        print(result.output)
+    # def test_login(self):
+    #     runner = CliRunner()
+    #     result = runner.invoke(main, ['login'], input="supertest@gmail.com\nsupertest123")
+    #     print(result.output)
         
-        assert "Successfully Logged In" in result.output
-        self.assertEqual(result.exit_code, 0)
+    #     assert "Successfully Logged In" in result.output
+    #     self.assertEqual(result.exit_code, 0)
 
     # def test_logout(self):
     #     runner = CliRunner()
