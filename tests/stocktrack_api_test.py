@@ -15,11 +15,11 @@ class StockTrackTests(unittest.TestCase):
         assert "Successfully Logged In" in result.output
         self.assertEqual(result.exit_code, 0)
 
-    def test_logout(self):
-        runner = CliRunner()
-        result = runner.invoke(main, ['logout'])
-        assert "Successfully logged out" in result.output
-        self.assertEqual(result.exit_code, 0)
+    # def test_logout(self):
+    #     runner = CliRunner()
+    #     result = runner.invoke(main, ['logout'])
+    #     assert "Successfully logged out" in result.output
+    #     self.assertEqual(result.exit_code, 0)
 
     # def test_get_data(self):
     #     pass
