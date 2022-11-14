@@ -12,15 +12,9 @@ class StockTrackTests(unittest.TestCase):
 
     def test_create(self):
         runner = CliRunner()
-        result = runner.invoke(main, ['create', 'test'])
+        result = runner.invoke(main, ['create', 'test123'])
         print(result.output)
         self.assertEqual(result.exit_code, 0)
-
-    # def test_edit_not_exist(self):
-    #     runner = CliRunner()
-    #     result = runner.invoke(main, ['edit'], input='tester_test')
-    #     assert "Test 'tester_test' does not exist" in result.output
-    #     self.assertEqual(result.exit_code, 0)
 
     # # figure out how to exit graph
     # def test_run_no_out(self):
