@@ -13,6 +13,7 @@ class StockTrackTests(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(main, ['login'], input="supertest@gmail.com\nsupertest123")
         print(result.output)
+        
         assert "Successfully Logged In" in result.output
         self.assertEqual(result.exit_code, 0)
 
