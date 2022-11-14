@@ -2,7 +2,6 @@ use rsi
 
 buy {
 	crossing rsi < 30
-	gay rsi > 30
 }
 
 sell {

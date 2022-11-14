@@ -52,20 +52,7 @@ class Tester:
             if self.balance != 0:
                 # look for buying
                 # check if each buy criteria is True and then buy if so
-                buy = False
-                for criteria in self.buy_criteria:
-                    # possibly use a switch statement for the different criteria
-                    if 'crossing' in criteria:
-                        buy = self.crossing(row, criteria.split(' ', 1)[1])
-                        if buy == False:
-                            break
-                    elif 'divergence' in criteria:
-                        buy = self.divergence(row, criteria.split(' ', 1)[1])
-                        if buy == False:
-                            break
-                    else:
-                        click.echo(click.style(f"Error, command '{criteria}' not found in test", fg='red'))
-                        exit()
+                buy = self.check_criteria(row, self.buy_criteria)
                         
                 if buy == True:
                     # buy as many shares as I can
@@ -77,23 +64,7 @@ class Tester:
             else:
                 # look to sell
                 # check if each sell criteria is True and then sell if so
-                sell = False
-                for criteria in self.sell_criteria:
-                    if 'crossing' in criteria:
-                        sell = self.crossing(row, criteria.split(' ', 1)[1])
-                        if sell == False:
-                            break
-                    elif 'divergence' in criteria:
-                        sell = sell.crossing(row, criteria.split(' ', 1)[1])
-                        if sell == False:
-                            break
-                    elif 'tp' in criteria or 'sl' in criteria:
-                        sell = self.tp_sl(row, criteria.split(' '))
-                        if sell == False:
-                            break
-                    else:
-                        click.echo(click.style(f"Error, command '{criteria}' not found in test", fg='red'))
-                        exit()
+                sell = self.check_criteria(row, self.sell_criteria)
 
                 if sell == True:
                     self.balance = self.num_of_shares*int(row['close'])
@@ -116,7 +87,25 @@ class Tester:
         self.output += self.buy_and_hold()
         
         return self.output, self.graph_output
-        
+    
+    def check_criteria(self, row, all_criteria):
+        for criteria in all_criteria:
+                # possibly use a switch statement for the different criteria
+                if 'crossing' in criteria:
+                    check = self.crossing(row, criteria.split(' ', 1)[1])
+                    if check == False:
+                        return False
+                elif 'divergence' in criteria:
+                    check = self.divergence(row, criteria.split(' ', 1)[1])
+                    if check == False:
+                        return False
+                elif 'tp' or 'sl' in criteria:
+                    check = self.tp_sl(row, criteria.split(' '))
+                    if check == False:
+                        return False
+
+        return True
+
     def crossing(self, data, criteria):
         # check the criteria/argument and if it is true return True
         criteria = criteria.split()

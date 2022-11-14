@@ -29,26 +29,35 @@ class Interpreter():
         buy = False
         sell = False
         for line in self.test:
-            if 'buy' in line:
-                # loop over the buy criteria until it reaches the }
-                buy = True
-
-            if 'sell' in line:
-                sell = True
-                
             if '}' in line:
                 buy = False
                 sell = False
 
             if buy == True:
                 # check if the command is available
-                if line.strip().split()[0] in self.available_commands:
+                command = line.strip().split()[0]
+                if command in self.available_commands:
                     self.buy_criteria.append(line.strip())
+                else:
+                    click.echo(click.style(f"Command '{command}' not available, please edit test", fg='red'))
+                    exit()
                     
             if sell == True:
                 # check if the command is available
-                if line.strip().split()[0] in self.available_commands:
+                command = line.strip().split()[0]
+                if command in self.available_commands:
                     self.sell_criteria.append(line.strip())
+                else:
+                    click.echo(click.style(f"Command '{command}' not available, please edit test", fg='red'))
+                    exit()
+
+            if 'buy' in line:
+                # loop over the buy criteria until it reaches the }
+                buy = True
+
+            if 'sell' in line:
+                sell = True
+
 
         return self.buy_criteria, self.sell_criteria
 
