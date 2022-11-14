@@ -3,6 +3,7 @@ from click.testing import CliRunner
 from cli.stocktrack import main
 
 class StockTrackTests(unittest.TestCase):
+    pass
     # def test_register(self):
     #     runner = CliRunner()
     #     result = runner.invoke(main, ['register'], input="supertest@gmail.com\nsupertest123\nsupertest123")
