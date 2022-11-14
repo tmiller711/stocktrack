@@ -2,13 +2,13 @@
 
 CLI to create and tests backtest strategies against stocks
 
-Account commands:
+## Account commands:
 
 - 'account' : returns the email of the active account if signed in
 - 'login' : logs you in to the api with credentials provided
 - 'register' : registers an account with the api with the credentials provided
 
-Commands:
+## Commands:
 
 - 'setdir' : set the folder you store your created tests in and where you want to output your results to
 - 'results' : show all previous results stored in your specified results folder
@@ -17,13 +17,13 @@ Commands:
 - 'delete' : delete a test stored in your tests folder
 - 'run' : run a specified test against a stock
 
-Created Tests:
+## Created Tests:
 - After you run the create command you have to go into you tests folder and edit the .txt file. To create the test you have to use the test language that we outline below
 
-Test Language:
+## Test Language:
 - The test outline language has you defining what indicators you want to use on the first row and then specifying buy and sell criteria
 
-- Available Command:
+- ## Available Commands:
   - 'crossing' : define an indicator and define a condition for when to run
   - 'divergence' : define type of divergence (bull or bear), what indicator to use for the divergence, and how many days to check back for the divergence
   example: 'divergence bull rsi 15'
