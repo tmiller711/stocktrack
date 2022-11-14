@@ -10,10 +10,11 @@ class StockTrackTests(unittest.TestCase):
         result = runner.invoke(main, ['setdir'], input=f"{path}\n{path}")
         self.assertEqual(result.exit_code, 0)
 
-    # def test_create(self):
-    #     runner = CliRunner()
-    #     result = runner.invoke(main, ['create', 'test'])
-    #     self.assertEqual(result.exit_code, 0)
+    def test_create(self):
+        runner = CliRunner()
+        result = runner.invoke(main, ['create', 'test'])
+        print(result.output)
+        self.assertEqual(result.exit_code, 0)
 
     # def test_edit_not_exist(self):
     #     runner = CliRunner()
