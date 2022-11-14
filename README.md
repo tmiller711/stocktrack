@@ -22,7 +22,8 @@ Created Tests:
 
 Test Language:
 - The test outline language has you defining what indicators you want to use on the first row and then specifying buy and sell criteria
-Example 1:
+
+example 1:
 ```
 use rsi
 
