@@ -23,6 +23,12 @@ Created Tests:
 Test Language:
 - The test outline language has you defining what indicators you want to use on the first row and then specifying buy and sell criteria
 
+- Available Command:
+  - 'crossing' : define an indicator and define a condition for when to run
+  - 'divergence' : define type of divergence (bull or bear), what indicator to use for the divergence, and how many days to check back for the divergence
+  example: 'divergence bull rsi 15'
+  - 'tp sl' : this is how you define the take profit and stop loss of a trade. Example: 'tp 7% sl -2%'
+  
 example 1:
 ```
 use rsi
@@ -36,12 +42,6 @@ sell {
 }
 ```
 This test will buy a stock when the rsi is less than 30 and sell when the rsi is greater than 70
-
-- Available Command:
-  - 'crossing' : define an indicator and define a condition for when to run
-  - 'divergence' : define type of divergence (bull or bear), what indicator to use for the divergence, and how many days to check back for the divergence
-  example: 'divergence bull rsi 15'
-  - 'tp sl' : this is how you define the take profit and stop loss of a trade. Example: 'tp 7% sl -2%'
   
 example 2:
 ```
