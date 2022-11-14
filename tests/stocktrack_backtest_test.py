@@ -13,6 +13,7 @@ class StockTrackTests(unittest.TestCase):
     def test_create(self):
         runner = CliRunner()
         result = runner.invoke(main, ['create', 'test123'])
+        print('askfasdasdjlkfjadslfas;jlksflkjsafdjlfvdslkjsfdakodvfsxiuhdfs')
         print(result.output)
         self.assertEqual(result.exit_code, 0)
 
