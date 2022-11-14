@@ -7,6 +7,7 @@ class StockTrackTests(unittest.TestCase):
     def test_dirs(self):
         runner = CliRunner()
         path = pathlib.Path(__file__).parent.resolve()
+        print(path)
         result = runner.invoke(main, ['setdir'], input=f"{path}\n{path}")
         self.assertEqual(result.exit_code, 0)
 
