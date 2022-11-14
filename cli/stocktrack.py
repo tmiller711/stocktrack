@@ -228,7 +228,7 @@ def check_login():
             r = requests.get('http://127.0.0.1:8000/account/getaccount', headers={'Authorization': f"Bearer {data['access']}"})
             if r.ok:
                 click.echo(click.style("Already signed in and token is valid", fg='green'))
-                exit()
+                return False
     except:
         pass
 
@@ -267,7 +267,8 @@ def login():
     '''
     Login to account
     '''
-    check_login()
+    if check_login() == False:
+        exit()
 
     email = click.prompt("Please enter your email", type=str)
     while '@' not in email or '.com' not in email:
