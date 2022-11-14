@@ -1,10 +1,13 @@
 import click
 import os
 
+def available_indicators():
+    return ['rsi', '100ma', 'macd', 'signal', 'volume', 'volumema']
+
 class Interpreter():
     def __init__(self, test):
         self.test = test
-        self.available_indicators = ['rsi', '100ma', 'macd', 'signal', 'volume', 'volumema']
+        self.available_indicators = available_indicators()
         self.used_indicators = []
         self.available_commands = ['crossing', 'divergence', 'tp', 'sl']
         self.buy_criteria = []

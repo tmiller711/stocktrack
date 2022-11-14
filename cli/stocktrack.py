@@ -2,7 +2,7 @@ import click
 import requests
 import pandas as pd
 import os
-from cli.interpreter import Interpreter
+from cli.interpreter import Interpreter, available_indicators
 from cli.strategy_tester import Tester, HandleResults
 import json
 from datetime import date, timedelta, datetime
@@ -66,6 +66,7 @@ def create_test(testname):
         exit()
     # Create a file with the name they specified
     with open(f'{test_dir}/{testname}.txt', 'w') as file:
+        click.echo(f"Available indicators: {available_indicators()}")
         click.echo(click.style(f"{testname} created at {test_dir}", fg='green'))
         # after they created the file present them with a text editor to make the test
 
