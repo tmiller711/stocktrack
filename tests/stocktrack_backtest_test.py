@@ -4,19 +4,19 @@ from cli.stocktrack import main
 import pathlib
 
 class StockTrackTests(unittest.TestCase):
-    def test_dirs(self):
-        runner = CliRunner()
-        path = pathlib.Path(__file__).parent.resolve()
-        print(path)
-        result = runner.invoke(main, ['setdir'], input=f"{path}\n{path}")
-        self.assertEqual(result.exit_code, 0)
+    pass
+    # def test_dirs(self):
+    #     runner = CliRunner()
+    #     path = pathlib.Path(__file__).parent.resolve()
+    #     print(path)
+    #     result = runner.invoke(main, ['setdir'], input=f"{path}\n{path}")
+    #     self.assertEqual(result.exit_code, 0)
 
-    def test_create(self):
-        runner = CliRunner()
-        result = runner.invoke(main, ['create', 'test123'])
-        print('askfasdasdjlkfjadslfas;jlksflkjsafdjlfvdslkjsfdakodvfsxiuhdfs')
-        print(result.output)
-        self.assertEqual(result.exit_code, 0)
+    # def test_create(self):
+    #     runner = CliRunner()
+    #     result = runner.invoke(main, ['create', 'test123'])
+    #     print(result.output)
+    #     self.assertEqual(result.exit_code, 0)
 
     # # figure out how to exit graph
     # def test_run_no_out(self):

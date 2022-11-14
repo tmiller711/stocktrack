@@ -112,8 +112,11 @@ def run_test(output):
     except:
         click.echo(click.style(f"Test: '{test_name}.txt' does not exist", fg='red'))
         exit()
+        
     click.echo(f"Available stocks: {avail_stocks()}")
     stock = click.prompt("What stock would you like to test on?").upper()
+    while stock not in avail_stocks():
+        stock = click.prompt(click.style(f"'{stock}' not available, please select valid stock", fg='red')).upper()
     timeframe = click.prompt("How many years back would you like to test?", type=int)
 
     # make a test to check if the file exists
@@ -247,8 +250,8 @@ def register():
 
     password1, password2 = '8', ''
     while password1 != password2 or len(password1) < 7:
-        password1 = click.prompt("Password | Must be 7 character or more")
-        password2 = click.prompt("Password (Confirm)")
+        password1 = click.prompt("Password | Must be 7 character or more", hide_input=True)
+        password2 = click.prompt("Password (Confirm)", hide_input=True)
         if password1 != password2:
             click.echo(click.style("Passwords do not match, please try again", fg='red'))
 

@@ -5,6 +5,7 @@ import json
 import click
 from datetime import datetime, timedelta
 import pathlib
+import os
 
 class HandleResults:
     def __init__(self, output, graph_output):
@@ -58,10 +59,13 @@ class Tester:
                         buy = self.crossing(row, criteria.split(' ', 1)[1])
                         if buy == False:
                             break
-                    if 'divergence' in criteria:
+                    elif 'divergence' in criteria:
                         buy = self.divergence(row, criteria.split(' ', 1)[1])
                         if buy == False:
                             break
+                    else:
+                        click.echo(click.style(f"Error, command '{criteria}' not found in test", fg='red'))
+                        exit()
                         
                 if buy == True:
                     # buy as many shares as I can
@@ -79,14 +83,17 @@ class Tester:
                         sell = self.crossing(row, criteria.split(' ', 1)[1])
                         if sell == False:
                             break
-                    if 'divergence' in criteria:
+                    elif 'divergence' in criteria:
                         sell = sell.crossing(row, criteria.split(' ', 1)[1])
                         if sell == False:
                             break
-                    if 'tp' in criteria or 'sl' in criteria:
+                    elif 'tp' in criteria or 'sl' in criteria:
                         sell = self.tp_sl(row, criteria.split(' '))
                         if sell == False:
                             break
+                    else:
+                        click.echo(click.style(f"Error, command '{criteria}' not found in test", fg='red'))
+                        exit()
 
                 if sell == True:
                     self.balance = self.num_of_shares*int(row['close'])

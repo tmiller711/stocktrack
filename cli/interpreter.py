@@ -1,3 +1,6 @@
+import click
+import os
+
 class Interpreter():
     def __init__(self, test):
         self.test = test
@@ -9,10 +12,13 @@ class Interpreter():
 
     def parse_indicators(self):
         # get the first line and see all the indicators they want to use
-        indicators = self.test.readline().split()
+        indicators = self.test.readline().split(' ', 1)[1].split()
         for indicator in indicators:
             if indicator in self.available_indicators:
                 self.used_indicators.append(indicator)
+            else:
+                click.echo(click.style(f"Indicator '{indicator}' not available, please update test", fg='red'))
+                quit()
 
         return self.used_indicators
 
