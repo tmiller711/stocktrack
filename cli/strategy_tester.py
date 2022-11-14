@@ -28,7 +28,7 @@ class HandleResults:
 
         plt.show()
 
-class Test:
+class Tester:
     def __init__(self, stock, buy_criteria, sell_criteria, indicators, start_date, end_date):
         self.balance = 1000
         self.stock = stock

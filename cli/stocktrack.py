@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 import os
 from cli.interpreter import Interpreter
-from cli.tester import Test, HandleResults
+from cli.strategy_tester import Tester, HandleResults
 import json
 from datetime import date, timedelta, datetime
 import sys
@@ -113,7 +113,7 @@ def run_test(output):
         click.echo(click.style(f"Test: '{test_name}.txt' does not exist", fg='red'))
         exit()
     click.echo(f"Available stocks: {avail_stocks()}")
-    stock = click.prompt("What stock would you like to test on?")
+    stock = click.prompt("What stock would you like to test on?").upper()
     timeframe = click.prompt("How many years back would you like to test?", type=int)
 
     # make a test to check if the file exists
@@ -124,7 +124,7 @@ def run_test(output):
     end_date = date.today()
     start_date = end_date - timedelta(days=(timeframe*365))
 
-    run_commands = Test(stock, buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
+    run_commands = Tester(stock, buy_criteria, sell_criteria, indicators, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"))
 
     results, graph_data = run_commands.run_test()
 
