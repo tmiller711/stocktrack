@@ -38,16 +38,16 @@ def get_results_dir():
 class StockTrackTests(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
+        self.path = get_path()
 
     def test_dirs(self):
-        path = pathlib.Path(__file__).parent.resolve()
-        print(path)
-        result = self.runner.invoke(main, ['setdir'], input=f"{path}\n{path}")
+        result = self.runner.invoke(main, ['setdir'], input=f"{self.path}\n{self.path}")
         self.assertEqual(result.exit_code, 0)
 
     def test_create(self):
         result = self.runner.invoke(main, ['create', 'test123'])
         print(result.output)
+        print("_______apjfajsf____")
         self.assertEqual(result.exit_code, 0)
 
     # figure out how to exit graph
