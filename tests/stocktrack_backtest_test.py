@@ -56,6 +56,9 @@ class StockTrackTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
 
     def test_create(self):
+        result = self.runner.invoke(main, ['setdir'], input=f"{self.path}\n{self.path}")
+        self.assertEqual(result.exit_code, 0)
+
         # test creating a new test
         result = self.runner.invoke(main, ['create', self.test_name])
         print(result.output)
