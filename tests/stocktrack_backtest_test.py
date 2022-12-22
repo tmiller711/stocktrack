@@ -58,6 +58,7 @@ class StockTrackTests(unittest.TestCase):
     def test_create(self):
         # test creating a new test
         result = self.runner.invoke(main, ['create', self.test_name])
+        print(result.output)
         self.assertEqual(result.exit_code, 0)
         self.assertTrue(os.path.isfile(f"{self.path}/{self.test_name}.txt"))
 
