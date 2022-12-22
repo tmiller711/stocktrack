@@ -46,8 +46,7 @@ class StockTrackTests(unittest.TestCase):
 
     def test_create(self):
         result = self.runner.invoke(main, ['create', 'test123'])
-        print(result.output)
-        print("_______apjfajsf____")
+        print(result.output, 'alsjfoiasfpsd-fj9sdfj9')
         self.assertEqual(result.exit_code, 0)
 
     # figure out how to exit graph
