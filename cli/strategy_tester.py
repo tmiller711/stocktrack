@@ -8,6 +8,14 @@ import pathlib
 import os
 
 class HandleResults:
+    """ 
+    Handles the printing, saving, and showing of results for a stock
+    testing scenario
+    
+    Attributes:
+        output (str): the results of the testing scenari as a string
+        graph_output (dict): A dictionary containing the dates and balances for each step of the testing scenari
+    """
     def __init__(self, output, graph_output):
         self.output = output
         self.graph_output = graph_output
@@ -30,6 +38,25 @@ class HandleResults:
         plt.show()
 
 class Tester:
+    """
+    Tests a stock based on given criteria and indicators
+
+    Attributes:
+        balance (int): The starting balance for the testing scenario.
+        stock (str): The ticker symbol for the stock being tested.
+        buy_criteria (list): A list of strings representing the criteria to be met for buying the stock.
+        sell_criteria (list): A list of strings representing the criteria to be met for selling the stock.
+        indicators (list): A list of strings representing the indicators to be used in the testing scenario.
+        start_date (str): The start date for the testing scenario in the format 'YYYY-MM-DD'.
+        end_date (str): The end date for the testing scenario in the format 'YYYY-MM-DD'.
+        stock_data (pandas DataFrame): A DataFrame containing the stock data for the testing scenario.
+        num_of_shares (float): The number of shares currently held.
+        num_of_trades (int): The number of trades made during the testing scenario.
+        last_buy_price (int): The price of the last buy made during the testing scenario.
+        output (str): The results of the testing scenario as a string.
+        graph_output (dict): A dictionary containing the dates and balances for each step of the testing scenario.
+        strategy (Strategy): An object representing the strategies used in the testing scenario.
+    """
     def __init__(self, stock, buy_criteria, sell_criteria, indicators, start_date, end_date):
         self.balance = 1000
         self.stock = stock
