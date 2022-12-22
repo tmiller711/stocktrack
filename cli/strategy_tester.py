@@ -156,6 +156,13 @@ def calc_percent_diff(current, previous):
 
 
 class Strategy:
+    """
+    A class to represent and execute various trading strategies.
+    
+    Attributes:
+        indicators (list): A list of indicators to use in the strategies.
+        stock_data (DataFrame): A Pandas DataFrame containing the stock data to use in the strategies.
+    """
     def __init__(self, indicators, stock_data):
         self.indicators = indicators
         self.stock_data = stock_data
