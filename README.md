@@ -7,14 +7,14 @@ This command creates a new test. It takes in a single required argument testname
 
 To create a test, run the following command:
 
-'''stocktrack create <testname>'''
+```stocktrack create <testname>```
 
 ### edit
 This command allows the user to edit a previously created test.
 
 To edit a test, run the following command:
 
-'''stocktrack edit'''
+```stocktrack edit```
 This will present the user with a list of all the tests they have created and prompt them to select the test they want to edit. The selected test will then be opened in a text editor for the user to edit.
 
 ### run
@@ -29,7 +29,7 @@ It also has the following optional arguments:
 - **'-g'**, **'--graph'**: Whether or not to generate a graph of the test results.
 To run a test, run the following command:
 
-'''stocktrack run <testname> <startdate> <enddate> [OPTIONS]'''
+```stocktrack run <testname> <startdate> <enddate> [OPTIONS]```
 
 ### setdir
 This command allows the user to set the directories where the tests and results are stored. It takes in the following arguments:
@@ -38,14 +38,14 @@ This command allows the user to set the directories where the tests and results 
 - **'resultsdir'**: The directory where the results should be stored.
 To set the directories, run the following command:
 
-'''stocktrack setdir <testdir> <resultsdir>'''
+```stocktrack setdir <testdir> <resultsdir>```
 
 ### results
 This command allows the user to view the results of a previously run test. It presents the user with a list of all the result files in the directory specified by the results_dir.txt file and prompts the user to select the file they want to view. It then displays the contents of the selected file.
 
 To view the results of a test, run the following command:
 
-'''stocktrack results'''
+```stocktrack results```
 
 ### Account commands
 - **'account'**: Returns the email of the active account if the user is signed in.
@@ -59,7 +59,7 @@ Here are a few examples of tests written in the test language:
 
 Example 1:
 
-'''
+```
 use rsi
 
 buy {
@@ -69,13 +69,13 @@ buy {
 sell {
     crossing rsi > 70
 }
-'''
+```
 This test will buy a stock when the rsi is less than 30 and sell when the rsi is greater than 70.
 
 
 Example 2:
 
-'''
+```
 use macd signal
 
 buy {
@@ -85,12 +85,12 @@ buy {
 sell {
     tp 7% sl -2%
 }
-'''
+```
 This test will buy stock when the macd line crosses the signal line and sell when either the take profit (7%) or the stop loss (-2%) are hit.
 
 Example 3:
 
-'''
+```
 use rsi
 
 buy {
@@ -100,8 +100,9 @@ buy {
 sell {
     crossing rsi > 70
 }
-'''
+```
 This test will buy when there is divergence on the rsi looking back 15 days and sell when/if the rsi goes above 70.
+
 
 ### Available Indicators
 The following indicators are available to be used in tests:
@@ -133,13 +134,14 @@ To get started with StockTrack, follow these steps:
 3. Run the stocktrack command followed by the desired subcommand and arguments.
 
 For example, to create a new test, run the following command:
-'''stocktrack create <testname>'''
+
+```stocktrack create <testname>```
 
 This will create a new test file in the tests directory with the name **'testname'**. The user can then edit the test by opening the file in a text editor.
 
 To run a test, use the **'run'** command:
 
-'''stocktrack run <testname> <startdate> <enddate> [OPTIONS]'''
+```stocktrack run <testname> <startdate> <enddate> [OPTIONS]```
 This will run the test testname on the specified dates and display or save the results according to the specified options.
 
 ### Additional Features
