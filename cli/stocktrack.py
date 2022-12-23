@@ -10,6 +10,7 @@ import sys
 from cli.texteditor import main as texteditor
 import curses
 import pathlib
+import subprocess
 
 def get_path():
     return pathlib.Path(__file__).parent.resolve()
@@ -69,30 +70,32 @@ def create_test(testname):
         click.echo(f"Available indicators: {available_indicators()}")
         click.echo(click.style(f"{testname} created at {test_dir}", fg='green'))
         # after they created the file present them with a text editor to make the test
+    
+    subprocess.run(['gedit', f'{test_dir}/{testname}.txt'])
 
-# @click.command(name='edit')
-# def edit_test():
-#     '''
-#     Edit a previously made test
-#     '''
-#     # show user all tests they created
-#     test_dir = get_test_dir()
-#     tests = os.listdir(test_dir)
-#     tests = [test.replace(".txt", "") for test in tests]
-#     if len(tests) == 0:
-#         click.echo(click.style('User has not made any tests', fg='red'))
-#         exit()
+@click.command(name='edit')
+def edit_test():
+    '''
+    Edit a previously made test
+    '''
+    # show user all tests they created
+    test_dir = get_test_dir()
+    tests = os.listdir(test_dir)
+    tests = [test.replace(".txt", "") for test in tests]
+    if len(tests) == 0:
+        click.echo(click.style('User has not made any tests', fg='red'))
+        exit()
 
-#     for test in tests:
-#         click.echo(test)
+    for test in tests:
+        click.echo(test)
 
-#     test_to_edit = click.prompt("Which test would you like to edit?")
-#     if test_to_edit not in tests:
-#         click.echo(click.style(f"Test '{test_to_edit}' does not exist", fg='red'))
-#         exit()
+    test_to_edit = click.prompt("Which test would you like to edit?")
+    if test_to_edit not in tests:
+        click.echo(click.style(f"Test '{test_to_edit}' does not exist", fg='red'))
+        exit()
 
-#     # open editor with test
-#     curses.wrapper(texteditor, filename=rf"{test_dir}/{test_to_edit}.txt")
+    # open editor with test
+    subprocess.run(['gedit', f'{test_dir}/{test_to_edit}.txt'])
 
 
 @click.command(name='run')
@@ -222,7 +225,7 @@ def avail_stocks():
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
-# main.add_command(edit_test)
+main.add_command(edit_test)
 main.add_command(show_results)
 main.add_command(delete_test)
 main.add_command(set_directory)
