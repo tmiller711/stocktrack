@@ -1,21 +1,19 @@
 import click
 import os
 
-def available_indicators():
-    return ['rsi', '100ma', 'macd', 'signal', 'volume', 'volumema']
-
 class Interpreter():
     def __init__(self, test):
         self.test = test
-        self.available_indicators = available_indicators()
+        self.available_indicators = ['rsi', '100ma', 'macd', 'signal', 'volume', 'volumema']
         self.used_indicators = []
         self.available_commands = ['crossing', 'divergence', 'tp', 'sl']
-        self.buy_criteria = []
-        self.sell_criteria = []
 
     def parse_indicators(self):
         # get the first line and see all the indicators they want to use
-        indicators = self.test.readline().split(' ', 1)[1].split()
+        indicators = self.test.readline().split()
+        # remove the use word from the line
+        indicators.pop(0)
+
         for indicator in indicators:
             if indicator in self.available_indicators:
                 self.used_indicators.append(indicator)
@@ -26,39 +24,32 @@ class Interpreter():
         return self.used_indicators
 
     def parse_test_criteria(self):
-        buy = False
-        sell = False
+        criteria = {'buy': [], 'sell': []}
+        
         for line in self.test:
-            if '}' in line:
-                buy = False
-                sell = False
+            line = line.strip()
+            if not line:
+                continue
 
-            if buy == True:
-                # check if the command is available
-                command = line.strip().split()[0]
-                if command in self.available_commands:
-                    self.buy_criteria.append(line.strip())
-                else:
-                    click.echo(click.style(f"Command '{command}' not available, please edit test", fg='red'))
-                    exit()
-                    
-            if sell == True:
-                # check if the command is available
-                command = line.strip().split()[0]
-                if command in self.available_commands:
-                    self.sell_criteria.append(line.strip())
-                else:
-                    click.echo(click.style(f"Command '{command}' not available, please edit test", fg='red'))
-                    exit()
+            if "buy" in line:
+                current_section = "buy"
+                continue
+            elif "sell" in line:
+                current_section = "sell"
+                continue
+            elif line == "}":
+                current_section == None
+                continue
 
-            if 'buy' in line:
-                # loop over the buy criteria until it reaches the }
-                buy = True
-
-            if 'sell' in line:
-                sell = True
+            # check if the command is available
+            command = line.split()[0]
+            if command not in self.available_commands:
+                click.echo(click.style(f"Command '{command}' not available, please edit test", fg='red'))
+                exit()
+            
+            criteria[current_section].append(line)
 
 
-        return self.buy_criteria, self.sell_criteria
+        return criteria['buy'], criteria['sell']
 
 
