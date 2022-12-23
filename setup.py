@@ -16,6 +16,7 @@ setup(
         'pandas',
         'matplotlib',
         'colorama',
+        'gedit'
     ],
     entry_points='''
     [console_scripts]
