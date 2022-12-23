@@ -2,9 +2,10 @@ import click
 import os
 
 class Interpreter():
+    available_indicators = ['rsi', '100ma', 'macd', 'signal', 'volume', 'volumema']
+
     def __init__(self, test):
         self.test = test
-        self.available_indicators = ['rsi', '100ma', 'macd', 'signal', 'volume', 'volumema']
         self.used_indicators = []
         self.available_commands = ['crossing', 'divergence', 'tp', 'sl']
 

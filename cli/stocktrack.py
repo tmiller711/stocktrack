@@ -55,7 +55,8 @@ def get_results_dir():
 
 @click.command(name='create')
 @click.argument('testname', required=True)
-def create_test(testname):
+@click.option('-ne', '--noeditor', is_flag=True, help="Don't pop up text editor")
+def create_test(testname, noeditor):
     '''
     Create a test
     '''
@@ -71,7 +72,8 @@ def create_test(testname):
         click.echo(click.style(f"{testname} created at {test_dir}", fg='green'))
         # after they created the file present them with a text editor to make the test
     
-    subprocess.run(['gedit', f'{test_dir}/{testname}.txt'])
+    if noeditor == False:
+        subprocess.run(['gedit', f'{test_dir}/{testname}.txt'])
 
 @click.command(name='edit')
 def edit_test():
