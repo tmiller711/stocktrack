@@ -42,40 +42,6 @@ class StockTrackTests(unittest.TestCase):
         self.path = get_path()
         self.test_name = 'test123'
         self.output_name = 'test'
-    
-    def tearDown(self):
-        # Clean up any files or directories created during the tests
-        test_dir = get_test_dir()
-        if os.path.isfile(f"{self.path}/{self.test_name}.txt"):
-            os.remove(f"{self.path}/{self.test_name}.txt")
-        if os.path.isfile(f"{self.path}/{self.output_name}.txt"):
-            os.remove(f"{self.path}/{self.output_name}.txt")
-
-    def test_dirs(self):
-        result = self.runner.invoke(main, ['setdir'], input=f"{self.path}\n{self.path}")
-        self.assertEqual(result.exit_code, 0)
-
-    def test_create(self):
-        result = self.runner.invoke(main, ['setdir'], input=f"{self.path}\n{self.path}")
-        self.assertEqual(result.exit_code, 0)
-
-        # test creating a new test
-        result = self.runner.invoke(main, ['create', self.test_name])
-        print(result.output)
-        self.assertEqual(result.exit_code, 0)
-        self.assertTrue(os.path.isfile(f"{self.path}/{self.test_name}.txt"))
-
-        # Test creating a test with a name that already exists
-        result = self.runner.invoke(main, ['create', self.test_name])
-        self.assertIn(f"Test '{self.test_name}' already exists", result.output)
-
-
-
-    # figure out how to exit graph
-    # def test_run_no_out(self):
-    #     result = self.runner.invoke(main, ['run'], input='test/n10')
-    #     self.runner.invoke(main, input='10')
-    #     self.assertEqual(result.exit_code, 0)
 
     # def test_run_out(self):
     #     result = self.runner.invoke(main, ['run', '-o test'], input='test\n10')
@@ -90,6 +56,61 @@ class StockTrackTests(unittest.TestCase):
     #     result = self.runner.invoke(main, ['delete'], input='test123')
     #     assert "test123 Successfully Deleted" in result.output
     #     self.assertEqual(result.exit_code, 0)
+
+# class SetDirectoriesTest(unittest.TestCase):
+#     def setUp(self):
+#         self.runner = CliRunner()
+#         self.path = get_path()
+
+#     def test_dirs(self):
+#         result = self.runner.invoke(main, ['setdir'], input=f"{self.path}\n{self.path}")
+#         self.assertEqual(result.exit_code, 0)
+
+# class CreateTestTests(unittest.TestCase):
+#     def setUp(self):
+#         self.runner = CliRunner()
+#         self.path = get_path()
+#         self.runner.invoke(main, ['setdir'], input=f"{self.path}\n{self.path}")
+#         self.test_name = "test123"
+
+#     def test_create(self):
+#         # test creating a new test
+#         result = self.runner.invoke(main, ['create', self.test_name])
+#         self.assertEqual(result.exit_code, 0)
+#         self.assertTrue(os.path.isfile(f"{self.path}/{self.test_name}.txt"))
+
+#     def test_create_exists(self):
+#         result = self.runner.invoke(main, ['create', self.test_name])
+#         self.assertEqual(result.exit_code, 0)
+#         self.assertTrue(os.path.isfile(f"{self.path}/{self.test_name}.txt"))
+
+#         result = self.runner.invoke(main, ['create', self.test_name])
+#         self.assertIn(f"Test '{self.test_name}' already exists", result.output)
+
+class RunTestTests(unittest.TestCase):
+    def setUp(self):
+        self.runner = CliRunner()
+        self.path = get_path()
+        self.runner.invoke(main, ['setdir'], input=f"{self.path}\n{self.path}")
+        self.test_name = "test123"
+        self.runner.invoke(main, ['create', self.test_name])
+
+        lines = ['use rsi\n', 'buy {\n', 'divergence bull rsi 15\n', '}\n', 'sell {\n', 'crossing rsi > 70\n', '}']
+        with open('test123.txt', 'w') as test_file:
+            test_file.writelines(lines)
+
+    # def tearDown(self):
+    #     test_dir = get_path()
+    #     if os.path.isfile(f"{test_dir}/{self.test_name}.txt"):
+            # os.remove(f"{test_dir}/{self.test_name}.txt")
+        # if os.path.isfile(f"{test_dir}/{self.output_name}.txt"):
+        #     os.remove(f"{test_dir}/{self.output_name}.txt")
+
+    def test_run_no_out(self):
+        result = self.runner.invoke(main, ['run'], input='test123\nspy\n10')
+        self.runner.invoke(main, input='10')
+        print(result.output)
+        self.assertEqual(result.exit_code, 0)
 
 if __name__ == "__main__":
     unittest.main()

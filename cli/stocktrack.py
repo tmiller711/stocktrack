@@ -97,7 +97,8 @@ def create_test(testname):
 
 @click.command(name='run')
 @click.option('-o', '--output')
-def run_test(output):
+@click.option('-g', '--graph', is_flag=True, help="Show output graph")
+def run_test(output, graph):
     '''
     Run a test
     '''
@@ -138,7 +139,8 @@ def run_test(output):
         o.save_results(output)
     else:
         o.print_results()
-        o.show_graph()
+        if graph == True:
+            o.show_graph()
 
     test_file.close()
 

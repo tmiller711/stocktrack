@@ -1,0 +1,7 @@
+use rsi
+buy {
+divergence bull rsi 15
+}
+sell {
+crossing rsi > 70
+}
