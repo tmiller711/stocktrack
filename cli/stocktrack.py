@@ -2,7 +2,7 @@ import click
 import requests
 import pandas as pd
 import os
-from cli.interpreter import Interpreter, available_indicators
+from cli.interpreter import Interpreter
 from cli.strategy_tester import Tester, HandleResults
 import json
 from datetime import date, timedelta, datetime
@@ -10,6 +10,7 @@ import sys
 from cli.texteditor import main as texteditor
 import curses
 import pathlib
+import subprocess
 
 def get_path():
     return pathlib.Path(__file__).parent.resolve()
@@ -54,7 +55,8 @@ def get_results_dir():
 
 @click.command(name='create')
 @click.argument('testname', required=True)
-def create_test(testname):
+@click.option('-ne', '--noeditor', is_flag=True, help="Don't pop up text editor")
+def create_test(testname, noeditor):
     '''
     Create a test
     '''
@@ -66,38 +68,42 @@ def create_test(testname):
         exit()
     # Create a file with the name they specified
     with open(f'{test_dir}/{testname}.txt', 'w') as file:
-        click.echo(f"Available indicators: {available_indicators()}")
+        click.echo(f"Available indicators: {Interpreter.available_indicators}")
         click.echo(click.style(f"{testname} created at {test_dir}", fg='green'))
         # after they created the file present them with a text editor to make the test
+    
+    if noeditor == False:
+        subprocess.run(['gedit', f'{test_dir}/{testname}.txt'])
 
-# @click.command(name='edit')
-# def edit_test():
-#     '''
-#     Edit a previously made test
-#     '''
-#     # show user all tests they created
-#     test_dir = get_test_dir()
-#     tests = os.listdir(test_dir)
-#     tests = [test.replace(".txt", "") for test in tests]
-#     if len(tests) == 0:
-#         click.echo(click.style('User has not made any tests', fg='red'))
-#         exit()
+@click.command(name='edit')
+def edit_test():
+    '''
+    Edit a previously made test
+    '''
+    # show user all tests they created
+    test_dir = get_test_dir()
+    tests = os.listdir(test_dir)
+    tests = [test.replace(".txt", "") for test in tests]
+    if len(tests) == 0:
+        click.echo(click.style('User has not made any tests', fg='red'))
+        exit()
 
-#     for test in tests:
-#         click.echo(test)
+    for test in tests:
+        click.echo(test)
 
-#     test_to_edit = click.prompt("Which test would you like to edit?")
-#     if test_to_edit not in tests:
-#         click.echo(click.style(f"Test '{test_to_edit}' does not exist", fg='red'))
-#         exit()
+    test_to_edit = click.prompt("Which test would you like to edit?")
+    if test_to_edit not in tests:
+        click.echo(click.style(f"Test '{test_to_edit}' does not exist", fg='red'))
+        exit()
 
-#     # open editor with test
-#     curses.wrapper(texteditor, filename=rf"{test_dir}/{test_to_edit}.txt")
+    # open editor with test
+    subprocess.run(['gedit', f'{test_dir}/{test_to_edit}.txt'])
 
 
 @click.command(name='run')
 @click.option('-o', '--output')
-def run_test(output):
+@click.option('-g', '--graph', is_flag=True, help="Show output graph")
+def run_test(output, graph):
     '''
     Run a test
     '''
@@ -138,7 +144,8 @@ def run_test(output):
         o.save_results(output)
     else:
         o.print_results()
-        o.show_graph()
+        if graph == True:
+            o.show_graph()
 
     test_file.close()
 
@@ -220,7 +227,7 @@ def avail_stocks():
 main.add_command(run_test)
 main.add_command(get_tests)
 main.add_command(create_test)
-# main.add_command(edit_test)
+main.add_command(edit_test)
 main.add_command(show_results)
 main.add_command(delete_test)
 main.add_command(set_directory)
